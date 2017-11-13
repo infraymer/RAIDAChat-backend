@@ -20,6 +20,7 @@ namespace RAIDAChat.Models
         public CloudChatEntities()
             : base("name=CloudChatEntities")
         {
+            //Database.SetInitializer(new DropCreateDatabaseIfModelChanges<CloudChatEntities>());
         }
     
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

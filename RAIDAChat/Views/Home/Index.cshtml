@@ -124,7 +124,10 @@
 
     function openPort() {
         $.ajax({
-            url: 'http://localhost/RAIDAChat/socket.ashx',
+            url: 'http://192.168.0.102/RAIDAChat/socket.ashx',
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            },
             statusCode: {
                 200: function () {
                     $('#ServPort').html('Порт успешно открыт')

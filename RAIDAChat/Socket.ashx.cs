@@ -44,12 +44,13 @@ namespace RAIDAChat
             try
             {
                 socketMessage = JsonConvert.DeserializeObject<InputSocketMessage>(message);
+                if (socketMessage == null) throw new Exception();
             }
             catch
             {
                 outputSocket = new OutputSocketMessage("DeserializeObject error:",
                             false,
-                            String.Format("Input string: '{0}' is not valid", message),
+                            String.Format("Input message: '{0}' is not valid", message),
                             new { }
                         );
                 BroadcastEcho(socket, JsonConvert.SerializeObject(outputSocket));
