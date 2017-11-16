@@ -7,3 +7,255 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+
+public partial class content_over_8000
+{
+    public int id { get; set; }
+    public System.Guid share_id { get; set; }
+    public byte[] file_data { get; set; }
+
+    public virtual shares shares { get; set; }
+}
+
+public partial class content_under_8000
+{
+    public int id { get; set; }
+    public int share_id { get; set; }
+    public byte[] file_data { get; set; }
+}
+
+public partial class group_members
+{
+    public System.Guid group_id { get; set; }
+    public System.Guid member_id { get; set; }
+    public string allow_or_deny { get; set; }
+
+    public virtual groups groups { get; set; }
+}
+
+public partial class groups
+{
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+    public groups()
+    {
+        this.group_members = new HashSet<group_members>();
+    }
+
+    public System.Guid group_id { get; set; }
+    public string group_name_part { get; set; }
+    public System.Guid owner_private_id { get; set; }
+    public string photo_fragment { get; set; }
+    public System.Guid org_private_id { get; set; }
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+    public virtual ICollection<group_members> group_members { get; set; }
+}
+
+public partial class members
+{
+    public System.Guid public_id { get; set; }
+    public System.Guid an { get; set; }
+    public System.Guid private_id { get; set; }
+    public System.DateTime month_last_use { get; set; }
+    public System.Guid org_id { get; set; }
+    public string description_fragment { get; set; }
+    public byte[] photo_fragment { get; set; }
+    public int kb_bandwidth_used { get; set; }
+    public string away_busy_ready { get; set; }
+}
+
+public partial class organizations
+{
+    public System.Guid private_id { get; set; }
+    public System.Guid public_id { get; set; }
+    public int kb_of_credit { get; set; }
+}
+
+public partial class shares
+{
+    public System.Guid id { get; set; }
+    public System.Guid member_public { get; set; }
+    public System.Guid owner_private { get; set; }
+    public System.Guid org_public { get; set; }
+    public System.Guid org_private { get; set; }
+    public System.Guid to_public { get; set; }
+    public System.DateTime death_date { get; set; }
+    public int kb_size { get; set; }
+    public string file_extention { get; set; }
+    public string self_one_or_group { get; set; }
+
+    public virtual content_over_8000 content { get; set; }
+}
+
+public partial class usp_content_over_8000Insert_Result
+{
+    public int id { get; set; }
+    public int shar_id { get; set; }
+    public byte[] file_data { get; set; }
+}
+
+public partial class usp_content_over_8000Select_Result
+{
+    public int id { get; set; }
+    public int shar_id { get; set; }
+    public byte[] file_data { get; set; }
+}
+
+public partial class usp_content_over_8000Update_Result
+{
+    public int id { get; set; }
+    public int shar_id { get; set; }
+    public byte[] file_data { get; set; }
+}
+
+public partial class usp_content_under_8000Insert_Result
+{
+    public int id { get; set; }
+    public int share_id { get; set; }
+    public byte[] file_data { get; set; }
+}
+
+public partial class usp_content_under_8000Select_Result
+{
+    public int id { get; set; }
+    public int share_id { get; set; }
+    public byte[] file_data { get; set; }
+}
+
+public partial class usp_content_under_8000Update_Result
+{
+    public int id { get; set; }
+    public int share_id { get; set; }
+    public byte[] file_data { get; set; }
+}
+
+public partial class usp_group_membersInsert_Result
+{
+    public System.Guid group_id { get; set; }
+    public System.Guid member_id { get; set; }
+    public string allow_or_deny { get; set; }
+}
+
+public partial class usp_group_membersSelect_Result
+{
+    public System.Guid group_id { get; set; }
+    public System.Guid member_id { get; set; }
+    public string allow_or_deny { get; set; }
+}
+
+public partial class usp_group_membersUpdate_Result
+{
+    public System.Guid group_id { get; set; }
+    public System.Guid member_id { get; set; }
+    public string allow_or_deny { get; set; }
+}
+
+public partial class usp_groupsInsert_Result
+{
+    public System.Guid group_id { get; set; }
+    public string group_name_part { get; set; }
+    public System.Guid owner_private_id { get; set; }
+    public string photo_fragment { get; set; }
+    public System.Guid org_private_id { get; set; }
+}
+
+public partial class usp_groupsSelect_Result
+{
+    public System.Guid group_id { get; set; }
+    public string group_name_part { get; set; }
+    public System.Guid owner_private_id { get; set; }
+    public string photo_fragment { get; set; }
+    public System.Guid org_private_id { get; set; }
+}
+
+public partial class usp_groupsUpdate_Result
+{
+    public System.Guid group_id { get; set; }
+    public string group_name_part { get; set; }
+    public System.Guid owner_private_id { get; set; }
+    public string photo_fragment { get; set; }
+    public System.Guid org_private_id { get; set; }
+}
+
+public partial class usp_membersInsert_Result
+{
+    public System.Guid public_id { get; set; }
+    public System.Guid an { get; set; }
+    public System.Guid private_id { get; set; }
+    public System.DateTime month_last_use { get; set; }
+    public System.Guid org_id { get; set; }
+    public string description_fragment { get; set; }
+    public byte[] photo_fragment { get; set; }
+    public int kb_bandwidth_used { get; set; }
+    public string away_busy_ready { get; set; }
+}
+
+public partial class usp_membersSelect_Result
+{
+    public System.Guid public_id { get; set; }
+    public System.Guid an { get; set; }
+    public System.Guid private_id { get; set; }
+    public System.DateTime month_last_use { get; set; }
+    public System.Guid org_id { get; set; }
+    public string description_fragment { get; set; }
+    public byte[] photo_fragment { get; set; }
+    public int kb_bandwidth_used { get; set; }
+    public string away_busy_ready { get; set; }
+}
+
+public partial class usp_membersUpdate_Result
+{
+    public System.Guid public_id { get; set; }
+    public System.Guid an { get; set; }
+    public System.Guid private_id { get; set; }
+    public System.DateTime month_last_use { get; set; }
+    public System.Guid org_id { get; set; }
+    public string description_fragment { get; set; }
+    public byte[] photo_fragment { get; set; }
+    public int kb_bandwidth_used { get; set; }
+    public string away_busy_ready { get; set; }
+}
+
+public partial class usp_sharesInsert_Result
+{
+    public int id { get; set; }
+    public System.Guid member_public { get; set; }
+    public System.Guid owner_private { get; set; }
+    public System.Guid org_public { get; set; }
+    public System.Guid org_private { get; set; }
+    public System.Guid to_public { get; set; }
+    public System.DateTime death_date { get; set; }
+    public int kb_size { get; set; }
+    public string file_extention { get; set; }
+    public string self_one_or_group { get; set; }
+}
+
+public partial class usp_sharesSelect_Result
+{
+    public int id { get; set; }
+    public System.Guid member_public { get; set; }
+    public System.Guid owner_private { get; set; }
+    public System.Guid org_public { get; set; }
+    public System.Guid org_private { get; set; }
+    public System.Guid to_public { get; set; }
+    public System.DateTime death_date { get; set; }
+    public int kb_size { get; set; }
+    public string file_extention { get; set; }
+    public string self_one_or_group { get; set; }
+}
+
+public partial class usp_sharesUpdate_Result
+{
+    public int id { get; set; }
+    public System.Guid member_public { get; set; }
+    public System.Guid owner_private { get; set; }
+    public System.Guid org_public { get; set; }
+    public System.Guid org_private { get; set; }
+    public System.Guid to_public { get; set; }
+    public System.DateTime death_date { get; set; }
+    public int kb_size { get; set; }
+    public string file_extention { get; set; }
+    public string self_one_or_group { get; set; }
+}
