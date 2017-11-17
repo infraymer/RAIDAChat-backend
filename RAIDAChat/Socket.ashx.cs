@@ -129,7 +129,7 @@ namespace RAIDAChat
             try
             {
                 server.Start(config);
-                context.Response.Write(String.Format("Success open. Port:{0}; Location:{1}", server.Port,  server.Location ));
+                //context.Response.Write(String.Format("Success open. Port:{0}; Location:{1}", server.Port,  server.Location ));
                 
             }
             catch (Exception e)
