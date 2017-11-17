@@ -123,7 +123,7 @@ namespace RAIDAChat
 
         public void ProcessRequest(HttpContext context)
         {
-            WebSocketServer server = new WebSocketServer("ws://0.0.0.0:8181");
+            WebSocketServer server = new WebSocketServer("wss://0.0.0.0:8181");
             server.ListenerSocket.NoDelay = true;
             Action<IWebSocketConnection> config = delegate (IWebSocketConnection socket) { OnWebSocketConnection(socket); };
             try
