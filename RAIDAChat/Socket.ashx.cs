@@ -123,15 +123,19 @@ namespace RAIDAChat
 
         public void ProcessRequest(HttpContext context)
         {
-            WebSocketServer server = new WebSocketServer("wss://0.0.0.0:8181");
-            server.ListenerSocket.NoDelay = true;
+            WebSocketServer server = new WebSocketServer("ws://0.0.0.0:8181");
+            //server.ListenerSocket.NoDelay = true;
             Action<IWebSocketConnection> config = delegate (IWebSocketConnection socket) { OnWebSocketConnection(socket); };
             try
             {
                 server.Start(config);
+                context.Response.Write(String.Format("Success open. ListenerSocket.LocalEndPoint:{0}; Port:{1}; Location:{2}", server.ListenerSocket.LocalEndPoint, server.Port,  server.Location ));
+                
             }
             catch (Exception e)
             {
+                context.Response.Write(e);
+                context.Response.Write(String.Format("Info WebSocketserver.  ListenerSocket.LocalEndPoint:{0}; Port:{1}; Location:{2}", server.ListenerSocket.LocalEndPoint, server.Port, server.Location));
                 context.Response.StatusCode = 201;
             }
            

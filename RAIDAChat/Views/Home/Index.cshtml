@@ -94,10 +94,10 @@
        
         if (typeof (WebSocket) !== 'undefined') {
             //socket = new WebSocket("ws://192.168.0.102:8181");
-            socket = new WebSocket("wss://5.141.98.216:8181");
+            socket = new WebSocket("ws://5.141.98.216:8181");
         } else {
             //socket = new MozWebSocket("ws://192.168.0.102:8181");
-            socket = new MozWebSocket("wss://5.141.98.216:8181");
+            socket = new MozWebSocket("ws://5.141.98.216:8181");
         }
 
         socket.onmessage = function (msg) {
