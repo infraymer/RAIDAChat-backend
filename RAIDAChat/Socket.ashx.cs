@@ -123,23 +123,41 @@ namespace RAIDAChat
 
         public void ProcessRequest(HttpContext context)
         {
-            WebSocketServer server = new WebSocketServer("ws://0.0.0.0:8181");
-            server.ListenerSocket.NoDelay = true;
-            Action<IWebSocketConnection> config = delegate (IWebSocketConnection socket) { OnWebSocketConnection(socket); };
+            
+            /*
+            System.Net.IPHostEntry ipHostInfo = System.Net.Dns.Resolve(System.Net.Dns.GetHostName());
+            System.Net.IPEndPoint localEP = new System.Net.IPEndPoint(ipHostInfo.AddressList[0], 49151);
+            System.Net.Sockets.Socket listener = new System.Net.Sockets.Socket(System.Net.IPAddress.Any.AddressFamily, System.Net.Sockets.SocketType.Stream, System.Net.Sockets.ProtocolType.Tcp);
+
+            //context.Response.WriteFile(String.Format("Local address and port : {0}", localEP.Address.ToString()));
+            
             try
             {
-                server.Start(config);
-                //context.Response.Write(String.Format("Success open. Port:{0}; Location:{1}", server.Port,  server.Location ));
-                
-            }
-            catch (Exception e)
-            {
-                context.Response.Write(e);
-                //context.Response.Write(String.Format("Info WebSocketserver.  ListenerSocket.LocalEndPoint:{0}; Port:{1}; Location:{2}", server.ListenerSocket.LocalEndPoint, server.Port, server.Location));
-                context.Response.StatusCode = 201;
-            }
-           
-        }
+                listener.Bind(localEP);
+                listener.Listen(10);
+                context.Response.Write("Succes open");
+            } catch (Exception e) {
+                context.Response.Write(e.ToString());  
+            }*/
+            
+    
+                WebSocketServer server = new WebSocketServer("ws://0.0.0.0:49151");
+                server.ListenerSocket.NoDelay = true;
+                Action<IWebSocketConnection> config = delegate (IWebSocketConnection socket) { OnWebSocketConnection(socket); };
+                try
+                {
+                    server.Start(config);
+                    context.Response.Write("Success open");
+
+                }
+                catch (Exception e)
+                {
+                    context.Response.Write(e);
+                    //context.Response.Write(String.Format("Info WebSocketserver.  ListenerSocket.LocalEndPoint:{0}; Port:{1}; Location:{2}", server.ListenerSocket.LocalEndPoint, server.Port, server.Location));
+                    context.Response.StatusCode = 201;
+                }
+
+}
 
         public bool IsReusable
         {

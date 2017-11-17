@@ -93,11 +93,11 @@
     function reConnect() {
        
         if (typeof (WebSocket) !== 'undefined') {
-            //socket = new WebSocket("ws://192.168.0.102:8181");
-            socket = new WebSocket("ws://5.141.98.216:8181");
+           socket = new WebSocket("ws://192.168.0.102:49151");
+           // socket = new WebSocket("ws://5.141.98.216:49151");
         } else {
-            //socket = new MozWebSocket("ws://192.168.0.102:8181");
-            socket = new MozWebSocket("ws://5.141.98.216:8181");
+            socket = new MozWebSocket("ws://192.168.0.102:49151");
+            //socket = new MozWebSocket("ws://5.141.98.216:49151");
         }
 
         socket.onmessage = function (msg) {
@@ -126,8 +126,8 @@
 
     function openPort() {
         $.ajax({
-            url: 'http://5.141.98.216/rcn1/socket.ashx',
-            //url: 'http://192.168.0.102/raidachat/socket.ashx',
+            //url: 'http://5.141.98.216/rcn1/socket.ashx',
+            url: 'http://192.168.0.102/raidachat/socket.ashx',
             headers: {
                 'Access-Control-Allow-Origin': '*'
             },
