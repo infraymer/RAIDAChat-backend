@@ -93,11 +93,15 @@
     function reConnect() {
        
         if (typeof (WebSocket) !== 'undefined') {
-           socket = new WebSocket("ws://192.168.0.102:49151");
-           // socket = new WebSocket("ws://5.141.98.216:49151");
+
+            //socket = new WebSocket("ws://130.0.222.101:49151");
+
+            socket = new WebSocket("ws://5.141.98.216:49151");
         } else {
-            socket = new MozWebSocket("ws://192.168.0.102:49151");
-            //socket = new MozWebSocket("ws://5.141.98.216:49151");
+
+           // socket = new MozWebSocket("ws://130.0.222.101:49151");
+
+            socket = new MozWebSocket("ws://5.141.98.216:49151");
         }
 
         socket.onmessage = function (msg) {
@@ -126,19 +130,16 @@
 
     function openPort() {
         $.ajax({
-            //url: 'http://5.141.98.216/rcn1/socket.ashx',
-            url: 'http://192.168.0.102/raidachat/socket.ashx',
+            //url: 'http://130.0.222.101:8080/raidachat/socket.ashx',
+            url: 'http://5.141.98.216/rcn1/socket.ashx',
+            
             headers: {
                 'Access-Control-Allow-Origin': '*'
             },
-            statusCode: {
-                200: function () {
-                    $('#ServPort').html('Порт успешно открыт')
-                },
-                201: function () {
-                    $('#ServPort').html('Порт уже открыт, можно подключаться')
-                }
-            }
+            complete: function (response, status) {
+                console.log(response)
+                $('#ServPort').html(status + " <br/> " + response.responseText)
+            } 
 
         })   
     }

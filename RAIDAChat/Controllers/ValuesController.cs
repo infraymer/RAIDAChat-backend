@@ -13,7 +13,7 @@ namespace RAIDAChat.Controllers
         //GET api/values
         public void Get()
         {
-            new Socket();
+            //new Socket();
             //return new string[] { "value1", "value2" };
         }
 
@@ -42,14 +42,14 @@ namespace RAIDAChat.Controllers
         [Route("openConnect")]
         public void openSocketConnect()
         {
-            new Socket();
+            //new Socket();
         }
 
         [HttpGet]
         [Route("closeConnect")]
         public void closeSocketConnect()
         {
-            new Socket();
+           // new Socket();
         }
     }
 }
