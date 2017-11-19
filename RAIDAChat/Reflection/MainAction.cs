@@ -86,7 +86,7 @@ namespace RAIDAChat.ReflectionClass
             {
                 output.success = false;
                 output.msgError = "Некорректый блок data";
-                rez.msg = output;
+                rez.msgForOwner = output;
                 return rez;            
             }
 
@@ -105,8 +105,8 @@ namespace RAIDAChat.ReflectionClass
                 }
             }
 
-            rez.msg = output;
-            rez.usersId.Add(info.login);
+            rez.msgForOwner = output;
+            //rez.usersId.Add(info.login);
 
             return rez;
         }
@@ -138,7 +138,7 @@ namespace RAIDAChat.ReflectionClass
             {
                 output.success = false;
                 output.msgError = "Некорректый блок data";
-                rez.msg = output;
+                rez.msgForOwner = output;
                 return rez;
             }
 
@@ -159,8 +159,8 @@ namespace RAIDAChat.ReflectionClass
                 }
             }
 
-            rez.msg = output;
-            rez.usersId.Add(info.login);
+            rez.msgForOwner = output;
+            //rez.usersId.Add(info.login);
             return rez;
         }
 
@@ -192,7 +192,7 @@ namespace RAIDAChat.ReflectionClass
             {
                 output.success = false;
                 output.msgError = "Некорректый блок data";
-                rez.msg = output;
+                rez.msgForOwner = output;
                 return rez;
             }
 
@@ -210,7 +210,6 @@ namespace RAIDAChat.ReflectionClass
                             Guid memberId = db.usp_membersSelect(info.memberId).First().private_id;
                             if (db.group_members.Any(it=> it.group_id==info.groupId && it.member_id == memberId))
                             {
-                                /*Добавить в API*/
                                 output.success = false;
                                 output.msgError = "Пользователь уже состоит в данной группе";
                             }
@@ -218,6 +217,7 @@ namespace RAIDAChat.ReflectionClass
                             {
                                 db.usp_group_membersInsert(info.groupId, memberId, "I don't known");
                                 rez.usersId.Add(info.memberId);
+                                rez.msgForOther = new { action = "You added in group" };
                             }
                         }
                         else
@@ -240,8 +240,8 @@ namespace RAIDAChat.ReflectionClass
                 }
             }
 
-            rez.msg = output;
-            rez.usersId.Add(info.login);
+            rez.msgForOwner = output;
+            //rez.usersId.Add(info.login);
             
             return rez;
         }
@@ -299,6 +299,8 @@ namespace RAIDAChat.ReflectionClass
             OutputSocketMessage output = new OutputSocketMessage("sendMsg", true, "", new { });
             OutputSocketMessageWithUsers rez = new OutputSocketMessageWithUsers();
 
+            OutGetMsgInfoForOtherUser outputForOther = null;
+
             InputMsgInfo info;
             try
             {
@@ -308,7 +310,7 @@ namespace RAIDAChat.ReflectionClass
             {
                 output.success = false;
                 output.msgError = "Некорректый блок data";
-                rez.msg = output;
+                rez.msgForOwner = output;
                 return rez;
             }
             
@@ -323,7 +325,7 @@ namespace RAIDAChat.ReflectionClass
                         {
                             output.success = false;
                             output.msgError = "Группа не найдена";
-                            rez.msg = output;
+                            rez.msgForOwner = output;
                             return rez;
                         }
                     }
@@ -331,7 +333,7 @@ namespace RAIDAChat.ReflectionClass
                     {
                         output.success = false;
                         output.msgError = "Пользователь не найден";
-                        rez.msg = output;
+                        rez.msgForOwner = output;
                         return rez;
                     }
 
@@ -357,13 +359,20 @@ namespace RAIDAChat.ReflectionClass
                         db.SaveChanges();
 
 
+                        outputForOther = new OutGetMsgInfoForOtherUser(info.msgId, info.textMsg, info.login, info.toGroup.ToString(), info.recipientId);
+
                         if (info.toGroup)
                         {
-                            db.group_members.Where(it => it.group_id == info.recipientId).ToList().ForEach(it => rez.usersId.Add(it.member_id));
+                            db.group_members.Where(it => it.group_id == info.recipientId && it.member_id != newShare.owner_private)
+                                    .ToList()
+                                    .ForEach(it => rez.usersId.Add(
+                                                                db.members.First(m=> m.private_id==it.member_id).public_id
+                                                                )
+                                    );
                         }
                         else
                         {
-                            rez.usersId.Add(info.login);
+                            //rez.usersId.Add(info.login);
                             rez.usersId.Add(info.recipientId);
                         }
 
@@ -373,12 +382,13 @@ namespace RAIDAChat.ReflectionClass
                 {
                     output.success = false;
                     output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
-                    rez.msg = output;
+                    rez.msgForOwner = output;
                     return rez;
                 }
             }
 
-            rez.msg = output;   
+            rez.msgForOwner = output;
+            rez.msgForOther = new { action="newMessage", data = outputForOther } ;
             return rez;
         }
 
@@ -430,7 +440,7 @@ namespace RAIDAChat.ReflectionClass
             {
                 output.success = false;
                 output.msgError = "Некорректый блок data";
-                rez.msg = output;
+                rez.msgForOwner = output;
                 return rez;
             }
 
@@ -488,7 +498,7 @@ namespace RAIDAChat.ReflectionClass
                             {
                                 output.success = false;
                                 output.msgError = "Группа не найдена";
-                                rez.msg = output;
+                                rez.msgForOwner = output;
                                 return rez;
                             }
                             else {
@@ -520,7 +530,7 @@ namespace RAIDAChat.ReflectionClass
                         {
                             output.success = false;
                             output.msgError = "Пользователь не найден";
-                            rez.msg = output;
+                            rez.msgForOwner = output;
                             return rez;
                         }
                         else
@@ -558,13 +568,13 @@ namespace RAIDAChat.ReflectionClass
                     output.success = false;
                     output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
 
-                    rez.msg = output;
+                    rez.msgForOwner = output;
                     return rez;
                 } 
                 output.data = list;
             }
-            rez.msg = output;
-            rez.usersId.Add(info.login);
+            rez.msgForOwner = output;
+            //rez.usersId.Add(info.login);
             return rez;
         }
 

@@ -1,4 +1,5 @@
-﻿using Fleck;
+﻿//using Fleck;
+using SuperSocket.WebSocket;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,6 @@ namespace RAIDAChat.Reflection.dto
     public class AuthInfoWithSocket: AuthInfo
     {
         public bool auth { get; set; }
-        public IWebSocketConnection socket { get; set; }
-
+        public WebSocketSession socket { get; set; }
     }
 }

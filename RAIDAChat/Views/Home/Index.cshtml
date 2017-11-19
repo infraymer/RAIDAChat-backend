@@ -9,6 +9,7 @@
         <h1><small>Сервер</small></h1><br />
         <span>Состояние: <span class="label alert-info" id="ServPort">Неизвестно</span></span><br /><br />
         <input class="btn btn-primary" value="Открыть порт" type="button" id="btn_serv" />
+        <input class="btn btn-danger" value="Закрыть порт" type="button" id="btn_closeserv" />
     </div>
 </div>
 <hr />
@@ -84,24 +85,22 @@
 <script type="text/javascript">
     var socket,
         $txt = document.getElementById('message'),
-            
-        $messages = document.getElementById('messages');
+        $messages = document.getElementById('messages'),
 
-        openPort()
+        socketConnect = "ws://192.168.0.102:49151",
+        detinServ = "http://192.168.0.102:8080/raidachat/api/openConnect";
+
+        //socketConnect = "ws://5.141.98.216:49151",
+        //detinServ = "http://5.141.98.216/rcn1/api/openConnect"; 
+        
         reConnect()
         
     function reConnect() {
        
         if (typeof (WebSocket) !== 'undefined') {
-
-            //socket = new WebSocket("ws://130.0.222.101:49151");
-
-            socket = new WebSocket("ws://5.141.98.216:49151");
+            socket = new WebSocket(socketConnect);
         } else {
-
-           // socket = new MozWebSocket("ws://130.0.222.101:49151");
-
-            socket = new MozWebSocket("ws://5.141.98.216:49151");
+            socket = new MozWebSocket(socketConnect);
         }
 
         socket.onmessage = function (msg) {
@@ -130,22 +129,23 @@
 
     function openPort() {
         $.ajax({
-            //url: 'http://130.0.222.101:8080/raidachat/socket.ashx',
-            url: 'http://5.141.98.216/rcn1/socket.ashx',
-            
-            headers: {
-                'Access-Control-Allow-Origin': '*'
-            },
+            url: detinServ,
             complete: function (response, status) {
                 console.log(response)
-                $('#ServPort').html(status + " <br/> " + response.responseText)
+                $('#ServPort').html(status)
             } 
-
         })   
     }
+       
+
     $('#btn_serv').click(function () {
         openPort();
     });
+
+    $('#btn_closeserv').click(function () {
+        socket.send('{  "execFun": "closesocket","data": { }}');
+    });
+   
 
     document.getElementById('send').onclick = function () {
         socket.send($txt.value);

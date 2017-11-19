@@ -33,4 +33,17 @@ namespace RAIDAChat.Reflection.dto
             this.group = group;
         }
     }
+
+
+    public class OutGetMsgInfoForOtherUser: OutGetMsgInfo
+    {
+        public Guid recipient { get; set; }
+
+        public OutGetMsgInfoForOtherUser(Guid guidMsg, string textMsg, Guid sender, string group, Guid recipient) :base(guidMsg, textMsg, sender, group)
+        {
+            this.recipient = recipient;
+        }
+
+    }
+
 }
