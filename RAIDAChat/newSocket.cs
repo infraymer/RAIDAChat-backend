@@ -17,7 +17,11 @@ namespace RAIDAChat
 
         List<AuthInfoWithSocket> mClients = new List<AuthInfoWithSocket>();
 
-        int portRcn = 49151;
+        //rcn1
+        int portRcn = 49011;
+
+        //rcn2
+        //int portRcn = 49012;
 
         public void OpenSocket()
         {
@@ -56,10 +60,10 @@ namespace RAIDAChat
 
             OutputSocketMessage outputSocket;
             InputSocketMessage socketMessage;
+            //Преобразование входного сообщения
             try
             {
                 socketMessage = JsonConvert.DeserializeObject<InputSocketMessage>(value);
-                if (socketMessage == null) throw new Exception();
             }
             catch
             {
@@ -72,6 +76,7 @@ namespace RAIDAChat
                 return;
             }
 
+            //Авторизация 
             if (socketMessage.execFun.Equals("subscribe", StringComparison.CurrentCultureIgnoreCase))
             {
                 AuthInfoWithSocket inf = (new MainAction()).Auth(socketMessage.data);
@@ -98,11 +103,11 @@ namespace RAIDAChat
             {
                 session.Send("Сокет будет закрыт");
                 webSocket.Stop();
-            }
+            }            
             else
             {
-
-                if (mClients.Any(it => it.socket == session))
+                //Проверка - авторизован ли пользователь
+                if (mClients.Any(it => it.socket == session) || socketMessage.execFun.Equals("registration", StringComparison.CurrentCultureIgnoreCase))
                 {
 
                     MainAction refClass = new MainAction();
@@ -110,8 +115,8 @@ namespace RAIDAChat
                     var me = refClass.GetType().GetMethod(socketMessage.execFun.ToLower(), System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
                     if (me != null)
                     {
-
-                        OutputSocketMessageWithUsers response = (OutputSocketMessageWithUsers)me.Invoke(refClass, new object[] { socketMessage.data });
+                        AuthInfoWithSocket currentUser = mClients.FirstOrDefault(it => it.socket == session);
+                        OutputSocketMessageWithUsers response = (OutputSocketMessageWithUsers)me.Invoke(refClass, new object[] { socketMessage.data, currentUser?.login });
 
                         outputSocket = response.msgForOwner;
 
@@ -140,7 +145,7 @@ namespace RAIDAChat
                 {
                     outputSocket = new OutputSocketMessage(socketMessage.execFun,
                                     false,
-                                    String.Format("Сначала необходимо подписаться на уведомления (Можно сказать это авторизация)", socketMessage.execFun),
+                                    "Сначала необходимо подписаться на уведомления (Можно сказать это авторизация)",
                                     new { }
                                 );
                     SendMessage(session, JsonConvert.SerializeObject(outputSocket));

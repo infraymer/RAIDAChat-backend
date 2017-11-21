@@ -12,9 +12,36 @@ namespace RAIDAChat.ReflectionClass
 {
     public class MainAction
     {
+
+        /// <summary>
+        /// Проверка и преобразование входных параметров метода
+        /// </summary>
+        /// <typeparam name="T">Ожидаемый класс</typeparam>
+        /// <param name="data">Объект с проверяемыми данными</param>
+        /// <param name="outp">Отображаемое сообщение</param>
+        /// <param name="rez">Общий клас объект для возврата данных</param>
+        /// <returns>Объект класса Т</returns>
+        private T DeserObj<T>(Object data, OutputSocketMessage outp, out OutputSocketMessageWithUsers rez)
+        {
+            rez = new OutputSocketMessageWithUsers();
+            T sucObj = default(T);
+            try
+            {
+                sucObj = JsonConvert.DeserializeObject<T>(data.ToString());
+            }
+            catch
+            {
+                outp.success = false;
+                outp.msgError = "Некорректый блок data";
+                rez.msgForOwner = outp;
+            }                       
+            return sucObj;
+        }
+
+
         public AuthInfoWithSocket Auth(object data)
         {
-
+            #region Тестовые данные
             /*
              {
                 "execFun": "subscribe",
@@ -24,6 +51,7 @@ namespace RAIDAChat.ReflectionClass
                 }
              }
              */
+            #endregion
 
             AuthInfoWithSocket output = new AuthInfoWithSocket();
 
@@ -53,8 +81,9 @@ namespace RAIDAChat.ReflectionClass
             return output;
         }
 
-        private OutputSocketMessageWithUsers registration(Object val)
+        private OutputSocketMessageWithUsers registration(Object val, Object nothing )
         {
+            #region Тестовые данные
             /*
             {
                 "execFun": "registration",
@@ -72,23 +101,30 @@ namespace RAIDAChat.ReflectionClass
                 }
             }
             */
+            #endregion
 
             OutputSocketMessage output = new OutputSocketMessage("registration", true, "", new { });
             OutputSocketMessageWithUsers rez = new OutputSocketMessageWithUsers();
 
-            string vall = val.ToString();
-            AuthInfo info;
-            try
+            AuthInfo info = DeserObj<AuthInfo>(val, output, out rez);
+            if(info == null)
             {
-                info = JsonConvert.DeserializeObject<AuthInfo>(vall);
+                return rez;
             }
-            catch 
-            {
-                output.success = false;
-                output.msgError = "Некорректый блок data";
-                rez.msgForOwner = output;
-                return rez;            
-            }
+            
+            //string vall = val.ToString();
+            //AuthInfo info;
+            //try
+            //{
+            //    info = JsonConvert.DeserializeObject<AuthInfo>(vall);
+            //}
+            //catch 
+            //{
+            //    output.success = false;
+            //    output.msgError = "Некорректый блок data";
+            //    rez.msgForOwner = output;
+            //    return rez;            
+            //}
 
            
             using (var db = new CloudChatEntities())
@@ -106,13 +142,12 @@ namespace RAIDAChat.ReflectionClass
             }
 
             rez.msgForOwner = output;
-            //rez.usersId.Add(info.login);
-
             return rez;
         }
 
-        private OutputSocketMessageWithUsers creategroup(Object val)
+        private OutputSocketMessageWithUsers creategroup(Object val, Guid myPublicLogin)
         {
+            #region Тестовые данные
             /*
              *  public_id - Добавить в API (Id Groups)
                         {
@@ -125,38 +160,45 @@ namespace RAIDAChat.ReflectionClass
                             }
                         }
                         */
+            #endregion
 
             OutputSocketMessage output = new OutputSocketMessage("createGroup", true, "", new { });
             OutputSocketMessageWithUsers rez = new OutputSocketMessageWithUsers();
 
-            GroupInfo info;
-            try
+            GroupInfo info = DeserObj<GroupInfo>(val, output, out rez);
+            if (info == null)
             {
-                info = JsonConvert.DeserializeObject<GroupInfo>(val.ToString());
-            }
-            catch
-            {
-                output.success = false;
-                output.msgError = "Некорректый блок data";
-                rez.msgForOwner = output;
                 return rez;
             }
+
+            //GroupInfo info;
+            //try
+            //{
+            //    info = JsonConvert.DeserializeObject<GroupInfo>(val.ToString());
+            //}
+            //catch
+            //{
+            //    output.success = false;
+            //    output.msgError = "Некорректый блок data";
+            //    rez.msgForOwner = output;
+            //    return rez;
+            //}
 
             using (var db = new CloudChatEntities())
             {
 
-                if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
-                {
-                    Guid owner = db.usp_membersSelect(info.login).First().private_id;
-
-                    db.usp_groupsInsert(info.public_id, info.name, owner, "", Guid.Empty);
-                    db.usp_group_membersInsert(info.public_id, owner, "allow_or_deny");
-                }
-                else
-                {
-                    output.success = false;
-                    output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
-                }
+                //if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
+                //{
+                Guid owner = db.usp_membersSelect(myPublicLogin).First().private_id;
+                
+                db.usp_groupsInsert(info.public_id, info.name, owner, "", Guid.Empty);
+                db.usp_group_membersInsert(info.public_id, owner, "allow_or_deny");
+                //}
+                //else
+                //{
+                //    output.success = false;
+                //    output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
+                //}
             }
 
             rez.msgForOwner = output;
@@ -164,11 +206,10 @@ namespace RAIDAChat.ReflectionClass
             return rez;
         }
 
-        private OutputSocketMessageWithUsers addmemberingroup(Object val)
+        private OutputSocketMessageWithUsers addmemberingroup(Object val, Guid myPublicLogin)
         {
+            #region Тестовые данные
             /*
-             
-             * 
                         {
                             "execFun": "addMemberInGroup",
                             "data": {
@@ -178,66 +219,73 @@ namespace RAIDAChat.ReflectionClass
                                 "groupId": "48A0CA0657DE4FB09CDC86008B2A8EBE"
                             }
                         }
-                        */
+                            */
+            #endregion
 
             OutputSocketMessage output = new OutputSocketMessage("addMemberInGroup", true, "", new { });
             OutputSocketMessageWithUsers rez = new OutputSocketMessageWithUsers();
 
-            AddMemberInGroupInfo info;
-            try
+            AddMemberInGroupInfo info = DeserObj<AddMemberInGroupInfo>(val, output, out rez);
+            if (info == null)
             {
-                info = JsonConvert.DeserializeObject<AddMemberInGroupInfo>(val.ToString());
-            }
-            catch
-            {
-                output.success = false;
-                output.msgError = "Некорректый блок data";
-                rez.msgForOwner = output;
                 return rez;
             }
+
+            //AddMemberInGroupInfo info;
+            //try
+            //{
+            //    info = JsonConvert.DeserializeObject<AddMemberInGroupInfo>(val.ToString());
+            //}
+            //catch
+            //{
+            //    output.success = false;
+            //    output.msgError = "Некорректый блок data";
+            //    rez.msgForOwner = output;
+            //    return rez;
+            //}
 
             using (var db = new CloudChatEntities())
             {
 
-                if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
+                //if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
+                //{
+                    
+                if(db.members.Any(it => it.public_id == info.memberId))
                 {
-                    Guid owner = db.members.FirstOrDefault(it => it.public_id == info.login && it.an == info.an).private_id;
-                    if(db.members.Any(it => it.public_id == info.memberId))
+                    Guid owner = db.members.First(it => it.public_id == myPublicLogin).private_id;
+                    if (db.group_members.Any(it=>it.member_id==owner && it.group_id==info.groupId))
                     {
-
-                        if(db.group_members.Any(it=>it.member_id==owner && it.group_id==info.groupId))
+                        Guid memberId = db.usp_membersSelect(info.memberId).First().private_id;
+                        if (db.group_members.Any(it=> it.group_id==info.groupId && it.member_id == memberId))
                         {
-                            Guid memberId = db.usp_membersSelect(info.memberId).First().private_id;
-                            if (db.group_members.Any(it=> it.group_id==info.groupId && it.member_id == memberId))
-                            {
-                                output.success = false;
-                                output.msgError = "Пользователь уже состоит в данной группе";
-                            }
-                            else
-                            {
-                                db.usp_group_membersInsert(info.groupId, memberId, "I don't known");
-                                rez.usersId.Add(info.memberId);
-                                rez.msgForOther = new { action = "You added in group" };
-                            }
+                            output.success = false;
+                            output.msgError = "Пользователь уже состоит в данной группе";
                         }
                         else
                         {
-                            output.success = false;
-                            output.msgError = "Группа не найдена";
-                        }                    
+                            db.usp_group_membersInsert(info.groupId, memberId, "I don't known");
+                            rez.usersId.Add(info.memberId);
+                            rez.msgForOther = new { action = "You added in group" };
+                        }
                     }
                     else
                     {
                         output.success = false;
-                        output.msgError = "Пользователь не найден";
-                    }
-                   
+                        output.msgError = "Группа не найдена";
+                    }                    
                 }
                 else
                 {
                     output.success = false;
-                    output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
+                    output.msgError = "Пользователь не найден";
                 }
+                   
+                //}
+                //else
+                //{
+                //    output.success = false;
+                //    output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
+                //}
             }
 
             rez.msgForOwner = output;
@@ -246,8 +294,9 @@ namespace RAIDAChat.ReflectionClass
             return rez;
         }
 
-        private OutputSocketMessageWithUsers sendmsg(Object val)
+        private OutputSocketMessageWithUsers sendmsg(Object val, Guid myPublicLogin)
         {
+            #region Тестовые данные
             /*
                         {
                             "execFun": "sendMsg",
@@ -295,96 +344,103 @@ namespace RAIDAChat.ReflectionClass
                             }
                         }
                         */
+            #endregion
 
             OutputSocketMessage output = new OutputSocketMessage("sendMsg", true, "", new { });
             OutputSocketMessageWithUsers rez = new OutputSocketMessageWithUsers();
 
-            OutGetMsgInfoForOtherUser outputForOther = null;
+            OutGetMsgInfo outputForOther = null;
 
-            InputMsgInfo info;
-            try
+            InputMsgInfo info = DeserObj<InputMsgInfo>(val, output, out rez);
+            if (info == null)
             {
-                info = JsonConvert.DeserializeObject<InputMsgInfo>(val.ToString());
-            }
-            catch
-            {
-                output.success = false;
-                output.msgError = "Некорректый блок data";
-                rez.msgForOwner = output;
                 return rez;
             }
-            
+
+            //InputMsgInfo info;
+            //try
+            //{
+            //    info = JsonConvert.DeserializeObject<InputMsgInfo>(val.ToString());
+            //}
+            //catch
+            //{
+            //    output.success = false;
+            //    output.msgError = "Некорректый блок data";
+            //    rez.msgForOwner = output;
+            //    return rez;
+            //}
+
             using (var db = new CloudChatEntities())
             {
 
-                if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
+                //if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
+                //{
+                if (info.toGroup)
                 {
-                    if (info.toGroup)
-                    {
-                        if(!db.groups.Any(it => it.group_id == info.recipientId))
-                        {
-                            output.success = false;
-                            output.msgError = "Группа не найдена";
-                            rez.msgForOwner = output;
-                            return rez;
-                        }
-                    }
-                    else if(!db.members.Any(it => it.public_id == info.recipientId))
+                    if(!db.groups.Any(it => it.group_id == info.recipientId))
                     {
                         output.success = false;
-                        output.msgError = "Пользователь не найден";
+                        output.msgError = "Группа не найдена";
                         rez.msgForOwner = output;
                         return rez;
                     }
-
-                    if (output.success)
-                    {
-
-                        content_over_8000 msg = new content_over_8000();
-                        msg.share_id = info.msgId;
-                        msg.file_data = Encoding.Unicode.GetBytes(info.textMsg);
-                        db.content_over_8000.Add(msg);
-
-                        shares newShare = new shares();
-                        newShare.id = info.msgId;
-                        newShare.owner_private = db.usp_membersSelect(info.login).First().private_id;
-                        newShare.to_public = info.recipientId;
-                        newShare.self_one_or_group = info.toGroup.ToString();
-                        newShare.content = msg;
-
-                        newShare.file_extention = "none";
-
-                        db.shares.Add(newShare);
-                    
-                        db.SaveChanges();
-
-
-                        outputForOther = new OutGetMsgInfoForOtherUser(info.msgId, info.textMsg, info.login, info.toGroup.ToString(), info.recipientId);
-
-                        if (info.toGroup)
-                        {
-                            db.group_members.Where(it => it.group_id == info.recipientId && it.member_id != newShare.owner_private)
-                                    .ToList()
-                                    .ForEach(it => rez.usersId.Add(
-                                                                db.members.First(m=> m.private_id==it.member_id).public_id
-                                                                )
-                                    );
-                        }
-                        else
-                        {
-                            //rez.usersId.Add(info.login);
-                            rez.usersId.Add(info.recipientId);
-                        }
-
-                    }
                 }
-                else
+                else if(!db.members.Any(it => it.public_id == info.recipientId))
                 {
                     output.success = false;
-                    output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
+                    output.msgError = "Пользователь не найден";
                     rez.msgForOwner = output;
                     return rez;
                 }
+
+                if (output.success)
+                {
+
+                    content_over_8000 msg = new content_over_8000();
+                    msg.share_id = info.msgId;
+                    msg.file_data = Encoding.Unicode.GetBytes(info.textMsg);
+                    db.content_over_8000.Add(msg);
+
+                    shares newShare = new shares();
+                    newShare.id = info.msgId;
+                    newShare.owner_private = db.usp_membersSelect(myPublicLogin).First().private_id;
+                    newShare.to_public = info.recipientId;
+                    newShare.self_one_or_group = info.toGroup.ToString();
+                    newShare.content = msg;
+
+                    newShare.file_extention = "none";
+
+                    db.shares.Add(newShare);
+                    
+                    db.SaveChanges();
+
+
+                    outputForOther = new OutGetMsgInfo(info.msgId, info.textMsg, myPublicLogin, info.toGroup.ToString(), info.recipientId);
+
+                    if (info.toGroup)
+                    {
+                        db.group_members.Where(it => it.group_id == info.recipientId && it.member_id != newShare.owner_private)
+                                .ToList()
+                                .ForEach(it => rez.usersId.Add(
+                                                            db.members.First(m=> m.private_id==it.member_id).public_id
+                                                            )
+                                );
+                    }
+                    else
+                    {
+                        //rez.usersId.Add(info.login);
+                        rez.usersId.Add(info.recipientId);
+                    }
+
+                }
+                //}
+                //else
+                //{
+                //    output.success = false;
+                //    output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
+                //    rez.msgForOwner = output;
+                //    return rez;
+                //}
             }
 
             rez.msgForOwner = output;
@@ -392,57 +448,66 @@ namespace RAIDAChat.ReflectionClass
             return rez;
         }
 
-        private OutputSocketMessageWithUsers getmsg(Object val)
+        private OutputSocketMessageWithUsers getmsg(Object val, Guid myPublicLogin)
         {
+            #region Тестовые данные
             /*
-                        {
-                            "execFun": "getMsg",
-                            "data": {
-                                "login": "80f7efc032dd4a7c97f69fca51ad3000",
-                                "an": "d842703c8acb4bd893876d700f60683e",
-                                "getAll": "true",     
-                                "onGroup": "false",
-                                "onlyId": "00000000000000000000000000000000"
-                            }
-                        }
-                         
-                        {
-                            "execFun": "getMsg",
-                            "data": {
-                                "login": "80f7efc032dd4a7c97f69fca51ad3000",
-                                "an": "d842703c8acb4bd893876d700f60683e",
-                                "getAll": "false",     
-                                "onGroup": "true",
-                                "onlyId": "48A0CA0657DE4FB09CDC86008B2A8EBE"
-                            }
-                        }
-                        {
-                            "execFun": "getMsg",
-                            "data": {
-                                "login": "80f7efc032dd4a7c97f69fca51ad3000",
-                                "an": "d842703c8acb4bd893876d700f60683e",
-                                "getAll": "false",     
-                                "onGroup": "false",
-                                "onlyId": "788FEFAD0ED24436AD73D968685110E8"
-                            }
-                        }
-                        */
+                       {
+                           "execFun": "getMsg",
+                           "data": {
+                               "login": "80f7efc032dd4a7c97f69fca51ad3000",
+                               "an": "d842703c8acb4bd893876d700f60683e",
+                               "getAll": "true",     
+                               "onGroup": "false",
+                               "onlyId": "00000000000000000000000000000000"
+                           }
+                       }
+
+                       {
+                           "execFun": "getMsg",
+                           "data": {
+                               "login": "80f7efc032dd4a7c97f69fca51ad3000",
+                               "an": "d842703c8acb4bd893876d700f60683e",
+                               "getAll": "false",     
+                               "onGroup": "true",
+                               "onlyId": "48A0CA0657DE4FB09CDC86008B2A8EBE"
+                           }
+                       }
+                       {
+                           "execFun": "getMsg",
+                           "data": {
+                               "login": "80f7efc032dd4a7c97f69fca51ad3000",
+                               "an": "d842703c8acb4bd893876d700f60683e",
+                               "getAll": "false",     
+                               "onGroup": "false",
+                               "onlyId": "788FEFAD0ED24436AD73D968685110E8"
+                           }
+                       }
+                       */
+            #endregion
+
 
             OutputSocketMessage output = new OutputSocketMessage("getMsg", true, "", new { });
             OutputSocketMessageWithUsers rez = new OutputSocketMessageWithUsers();
 
-            InGetMsgInfo info;
-            try
+            InGetMsgInfo info = DeserObj<InGetMsgInfo>(val, output, out rez);
+            if (info == null)
             {
-                info = JsonConvert.DeserializeObject<InGetMsgInfo>(val.ToString());
-            }
-            catch
-            {
-                output.success = false;
-                output.msgError = "Некорректый блок data";
-                rez.msgForOwner = output;
                 return rez;
             }
+
+            //InGetMsgInfo info;
+            //try
+            //{
+            //    info = JsonConvert.DeserializeObject<InGetMsgInfo>(val.ToString());
+            //}
+            //catch
+            //{
+            //    output.success = false;
+            //    output.msgError = "Некорректый блок data";
+            //    rez.msgForOwner = output;
+            //    return rez;
+            //}
 
             using (var db = new CloudChatEntities())
             {
@@ -450,30 +515,106 @@ namespace RAIDAChat.ReflectionClass
                
                 List<OutGetMsgInfo> list = new List<OutGetMsgInfo>();
 
-                if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
-                {               
-                    var owner = db.usp_membersSelect(info.login).Single();
+                //if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
+                //{               
+                var owner = db.usp_membersSelect(myPublicLogin).Single();
 
-                    var myListGroupId = from m in db.members
-                                        join membgr in db.group_members on m.private_id equals membgr.member_id
-                                        //join gr in db.groups on membgr.group_id equals gr.group_id
-                                        where m.public_id == owner.public_id
-                                        select membgr.group_id;
+                var myListGroupId = from m in db.members
+                                    join membgr in db.group_members on m.private_id equals membgr.member_id
+                                    //join gr in db.groups on membgr.group_id equals gr.group_id
+                                    where m.public_id == owner.public_id
+                                    select membgr.group_id;
 
-                    if (info.getAll)
+                if (info.getAll)
+                {
+
+                    var msgInfoList = from s in db.shares
+                                    join content in db.content_over_8000 on s.id equals content.share_id
+                                    where s.owner_private == owner.private_id ||
+                                            (s.to_public == owner.public_id && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase)) ||
+                                            (myListGroupId.Contains(s.to_public) && s.self_one_or_group.Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                                    select new
+                                    {
+                                        guidMsg = s.id,
+                                        textMsg = content.file_data,
+                                        sender = s.owner_private,
+                                        gr = s.self_one_or_group,
+                                        recip = s.to_public
+                                    };
+
+                    foreach (var item in msgInfoList)
                     {
+                        list.Add(
+                            new OutGetMsgInfo(
+                                item.guidMsg,
+                                Encoding.Unicode.GetString(item.textMsg),
+                                db.members.First(it => it.private_id == item.sender).public_id,
+                                item.gr,
+                                item.recip
+                            )
+                        );
+                    }
 
+                }
+                else
+                {
+                        
+                    if (info.onGroup)
+                    {
+                        if (!db.groups.Any(it => it.group_id == info.onlyId) && !myListGroupId.Contains(info.onlyId))
+                        {
+                            output.success = false;
+                            output.msgError = "Группа не найдена";
+                            rez.msgForOwner = output;
+                            return rez;
+                        }
+                        else {
+                            var msgInfoList = from s in db.shares
+                                            join content in db.content_over_8000 on s.id equals content.share_id
+                                            where (s.to_public == info.onlyId && s.self_one_or_group.Equals("true", StringComparison.InvariantCultureIgnoreCase)) 
+                                            select new
+                                                    {
+                                                        guidMsg = s.id,
+                                                        textMsg = content.file_data,
+                                                        sender = s.owner_private,
+                                                        gr = s.self_one_or_group,
+                                                        recip = s.to_public
+                                                    };
+
+                            foreach (var item in msgInfoList)
+                            {
+                                list.Add(
+                                    new OutGetMsgInfo(
+                                        item.guidMsg,
+                                        Encoding.Unicode.GetString(item.textMsg),
+                                        db.members.First(it => it.private_id == item.sender).public_id,
+                                        item.gr,
+                                        item.recip
+                                    )
+                                );
+                            }
+                        }
+                    }
+                    else if(!db.members.Any(it => it.public_id == info.onlyId))
+                    {
+                        output.success = false;
+                        output.msgError = "Пользователь не найден";
+                        rez.msgForOwner = output;
+                        return rez;
+                    }
+                    else
+                    {
                         var msgInfoList = from s in db.shares
                                         join content in db.content_over_8000 on s.id equals content.share_id
-                                        where s.owner_private == owner.private_id ||
-                                                (s.to_public == owner.public_id && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase)) ||
-                                                (myListGroupId.Contains(s.to_public) && s.self_one_or_group.Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                                        where (s.owner_private == owner.private_id && s.to_public == info.onlyId && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase)) ||
+                                            (s.owner_private == db.members.FirstOrDefault(it=>it.public_id==info.onlyId).private_id && s.to_public == owner.public_id && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase))
                                         select new
                                         {
                                             guidMsg = s.id,
                                             textMsg = content.file_data,
                                             sender = s.owner_private,
-                                            gr = s.self_one_or_group
+                                            gr = s.self_one_or_group,
+                                            recip = s.to_public
                                         };
 
                         foreach (var item in msgInfoList)
@@ -483,94 +624,24 @@ namespace RAIDAChat.ReflectionClass
                                     item.guidMsg,
                                     Encoding.Unicode.GetString(item.textMsg),
                                     db.members.First(it => it.private_id == item.sender).public_id,
-                                    item.gr
+                                    item.gr,
+                                    item.recip
                                 )
                             );
                         }
-
-                    }
-                    else
-                    {
-                        
-                        if (info.onGroup)
-                        {
-                            if (!db.groups.Any(it => it.group_id == info.onlyId) && !myListGroupId.Contains(info.onlyId))
-                            {
-                                output.success = false;
-                                output.msgError = "Группа не найдена";
-                                rez.msgForOwner = output;
-                                return rez;
-                            }
-                            else {
-                                var msgInfoList = from s in db.shares
-                                              join content in db.content_over_8000 on s.id equals content.share_id
-                                              where (s.to_public == info.onlyId && s.self_one_or_group.Equals("true", StringComparison.InvariantCultureIgnoreCase)) 
-                                              select new
-                                                      {
-                                                          guidMsg = s.id,
-                                                          textMsg = content.file_data,
-                                                          sender = s.owner_private,
-                                                          gr = s.self_one_or_group
-                                                      };
-
-                                foreach (var item in msgInfoList)
-                                {
-                                    list.Add(
-                                        new OutGetMsgInfo(
-                                            item.guidMsg,
-                                            Encoding.Unicode.GetString(item.textMsg),
-                                            db.members.First(it => it.private_id == item.sender).public_id,
-                                            item.gr
-                                        )
-                                    );
-                                }
-                            }
-                        }
-                        else if(!db.members.Any(it => it.public_id == info.onlyId))
-                        {
-                            output.success = false;
-                            output.msgError = "Пользователь не найден";
-                            rez.msgForOwner = output;
-                            return rez;
-                        }
-                        else
-                        {
-                            var msgInfoList = from s in db.shares
-                                          join content in db.content_over_8000 on s.id equals content.share_id
-                                          where (s.owner_private == owner.private_id && s.to_public == info.onlyId && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase)) ||
-                                                (s.owner_private == db.members.FirstOrDefault(it=>it.public_id==info.onlyId).private_id && s.to_public == owner.public_id && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase))
-                                          select new
-                                          {
-                                              guidMsg = s.id,
-                                              textMsg = content.file_data,
-                                              sender = s.owner_private,
-                                              gr = s.self_one_or_group
-                                          };
-
-                            foreach (var item in msgInfoList)
-                            {
-                                list.Add(
-                                    new OutGetMsgInfo(
-                                        item.guidMsg,
-                                        Encoding.Unicode.GetString(item.textMsg),
-                                        db.members.First(it => it.private_id == item.sender).public_id,
-                                        item.gr
-                                    )
-                                );
-                            }
-                        }
-
                     }
 
                 }
-                else
-                {
-                    output.success = false;
-                    output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
 
-                    rez.msgForOwner = output;
-                    return rez;
-                } 
+                //}
+                //else
+                //{
+                //    output.success = false;
+                //    output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
+
+                //    rez.msgForOwner = output;
+                //    return rez;
+                //} 
                 output.data = list;
             }
             rez.msgForOwner = output;

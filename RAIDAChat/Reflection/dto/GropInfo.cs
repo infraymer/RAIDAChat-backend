@@ -7,7 +7,7 @@ using System.Web;
 namespace RAIDAChat.Reflection.dto
 {
     [Serializable]
-    public class GroupInfo: AuthInfo
+    public class GroupInfo
     {
         [JsonProperty(PropertyName = "groupName")]
         public string name { get; set; }

@@ -5,7 +5,7 @@ using System.Web;
 
 namespace RAIDAChat.Reflection.dto
 {
-    public class InGetMsgInfo: AuthInfo
+    public class InGetMsgInfo
     {
         public bool getAll { get; set; }
         public bool onGroup { get; set; }
@@ -20,30 +20,33 @@ namespace RAIDAChat.Reflection.dto
         public Guid sender { get; set; }
         public string group { get; set; }
 
+        public Guid recipient { get; set; }
+
         public OutGetMsgInfo()
         {
 
         }
 
-        public OutGetMsgInfo(Guid guidMsg, string textMsg, Guid sender, string group)
+        public OutGetMsgInfo(Guid guidMsg, string textMsg, Guid sender, string group, Guid recipient)
         {
             this.guidMsg = guidMsg;
             this.textMsg = textMsg;
             this.sender = sender;
             this.group = group;
-        }
-    }
-
-
-    public class OutGetMsgInfoForOtherUser: OutGetMsgInfo
-    {
-        public Guid recipient { get; set; }
-
-        public OutGetMsgInfoForOtherUser(Guid guidMsg, string textMsg, Guid sender, string group, Guid recipient) :base(guidMsg, textMsg, sender, group)
-        {
             this.recipient = recipient;
         }
-
     }
+
+
+    //public class OutGetMsgInfoForOtherUser: OutGetMsgInfo
+    //{
+    //    public Guid recipient { get; set; }
+
+    //    public OutGetMsgInfoForOtherUser(Guid guidMsg, string textMsg, Guid sender, string group, Guid recipient) :base(guidMsg, textMsg, sender, group)
+    //    {
+    //        this.recipient = recipient;
+    //    }
+
+    //}
 
 }

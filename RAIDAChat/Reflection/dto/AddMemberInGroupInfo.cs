@@ -5,7 +5,7 @@ using System.Web;
 
 namespace RAIDAChat.Reflection.dto
 {
-    public class AddMemberInGroupInfo: AuthInfo
+    public class AddMemberInGroupInfo
     {
         public Guid memberId { get; set; }
         public Guid groupId { get; set; }

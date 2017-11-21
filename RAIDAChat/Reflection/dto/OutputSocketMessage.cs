@@ -24,6 +24,7 @@ namespace RAIDAChat.Reflection.dto
     public class OutputSocketMessageWithUsers
     {
         public OutputSocketMessage msgForOwner { get; set; }
+        //Определить объект
         public object msgForOther { get; set; }
         public List<Guid> usersId { get; set; }
         public OutputSocketMessageWithUsers()
