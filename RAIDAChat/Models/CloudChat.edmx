@@ -4,22 +4,14 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="Хранилище CloudChatModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+      <Schema Namespace="Хранилище CloudChatModel1" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="content_over_8000">
           <Key>
-            <PropertyRef Name="share_id" />
+            <PropertyRef Name="shar_id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="share_id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="shar_id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="file_data" Type="varbinary(max)" Nullable="false" />
-        </EntityType>
-        <EntityType Name="content_under_8000">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="int" Nullable="false" />
-          <Property Name="share_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="file_data" Type="varbinary" MaxLength="8000" Nullable="false" />
         </EntityType>
         <EntityType Name="group_members">
           <Key>
@@ -80,13 +72,17 @@
           <Property Name="kb_size" Type="int" Nullable="false" />
           <Property Name="file_extention" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="self_one_or_group" Type="varchar" MaxLength="10" />
+          <Property Name="total_fragment" Type="int" Nullable="false" />
+          <Property Name="current_fragment" Type="int" Nullable="false" />
+          <Property Name="sending_date" Type="bigint" Nullable="false" />
+          <Property Name="reserve" Type="varchar" MaxLength="500" />
         </EntityType>
         <Function Name="usp_content_over_8000Delete" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_content_over_8000Insert" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="int" Mode="In" />
-          <Parameter Name="share_id" Type="uniqueidentifier" Mode="In" />
+          <Parameter Name="shar_id" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="file_data" Type="varbinary(max)" Mode="In" />
         </Function>
         <Function Name="usp_content_over_8000Select" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
@@ -182,6 +178,7 @@
           <Parameter Name="id" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_sharesInsert" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="id" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="member_public" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="owner_private" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="org_public" Type="uniqueidentifier" Mode="In" />
@@ -191,12 +188,16 @@
           <Parameter Name="kb_size" Type="int" Mode="In" />
           <Parameter Name="file_extention" Type="varchar" Mode="In" />
           <Parameter Name="self_one_or_group" Type="varchar" Mode="In" />
+          <Parameter Name="total_fragment" Type="int" Mode="In" />
+          <Parameter Name="current_fragment" Type="int" Mode="In" />
+          <Parameter Name="sending_date" Type="bigint" Mode="In" />
+          <Parameter Name="reserve" Type="varchar" Mode="In" />
         </Function>
         <Function Name="usp_sharesSelect" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="id" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_sharesUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
-          <Parameter Name="id" Type="int" Mode="In" />
+          <Parameter Name="id" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="member_public" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="owner_private" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="org_public" Type="uniqueidentifier" Mode="In" />
@@ -206,10 +207,13 @@
           <Parameter Name="kb_size" Type="int" Mode="In" />
           <Parameter Name="file_extention" Type="varchar" Mode="In" />
           <Parameter Name="self_one_or_group" Type="varchar" Mode="In" />
+          <Parameter Name="total_fragment" Type="int" Mode="In" />
+          <Parameter Name="current_fragment" Type="int" Mode="In" />
+          <Parameter Name="sending_date" Type="bigint" Mode="In" />
+          <Parameter Name="reserve" Type="varchar" Mode="In" />
         </Function>
-        <EntityContainer Name="Хранилище CloudChatModelContainer">
+        <EntityContainer Name="Хранилище CloudChatModel1Container">
           <EntitySet Name="content_over_8000" EntityType="Self.content_over_8000" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="content_under_8000" EntityType="Self.content_under_8000" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="group_members" EntityType="Self.group_members" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="groups" EntityType="Self.groups" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="members" EntityType="Self.members" Schema="dbo" store:Type="Tables" />
@@ -222,36 +226,117 @@
     FROM [dbo].[organizations] AS [organizations]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
-      </Schema></edmx:StorageModels>
+      </Schema>
+    </edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CloudChatModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="content_over_8000">
+          <Key>
+            <PropertyRef Name="shar_id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="shar_id" Type="Guid" Nullable="false" />
+          <Property Name="file_data" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <NavigationProperty Name="shares" Relationship="CloudChatModel1.sharescontent_over_8000" FromRole="content_over_8000" ToRole="shares" />
+        </EntityType>
+        <EntityType Name="group_members">
+          <Key>
+            <PropertyRef Name="group_id" />
+            <PropertyRef Name="member_id" />
+          </Key>
+          <Property Name="group_id" Type="Guid" Nullable="false" />
+          <Property Name="member_id" Type="Guid" Nullable="false" />
+          <Property Name="allow_or_deny" Type="String" MaxLength="5" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="groups" Relationship="CloudChatModel1.groupsgroup_members" FromRole="group_members" ToRole="groups" />
+        </EntityType>
+        <EntityType Name="groups">
+          <Key>
+            <PropertyRef Name="group_id" />
+          </Key>
+          <Property Name="group_id" Type="Guid" Nullable="false" />
+          <Property Name="group_name_part" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="owner_private_id" Type="Guid" Nullable="false" />
+          <Property Name="photo_fragment" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="org_private_id" Type="Guid" Nullable="false" />
+          <NavigationProperty Name="group_members" Relationship="CloudChatModel1.groupsgroup_members" FromRole="groups" ToRole="group_members" />
+        </EntityType>
+        <EntityType Name="members">
+          <Key>
+            <PropertyRef Name="public_id" />
+          </Key>
+          <Property Name="public_id" Type="Guid" Nullable="false" />
+          <Property Name="an" Type="Guid" Nullable="false" />
+          <Property Name="private_id" Type="Guid" Nullable="false" />
+          <Property Name="month_last_use" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="org_id" Type="Guid" Nullable="false" />
+          <Property Name="description_fragment" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="photo_fragment" Type="Binary" MaxLength="8000" FixedLength="false" Nullable="false" />
+          <Property Name="kb_bandwidth_used" Type="Int32" Nullable="false" />
+          <Property Name="away_busy_ready" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+        </EntityType>
+        <EntityType Name="shares">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Guid" Nullable="false" />
+          <Property Name="member_public" Type="Guid" Nullable="false" />
+          <Property Name="owner_private" Type="Guid" Nullable="false" />
+          <Property Name="org_public" Type="Guid" Nullable="false" />
+          <Property Name="org_private" Type="Guid" Nullable="false" />
+          <Property Name="to_public" Type="Guid" Nullable="false" />
+          <Property Name="death_date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="kb_size" Type="Int32" Nullable="false" />
+          <Property Name="file_extention" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="self_one_or_group" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="total_fragment" Type="Int32" Nullable="false" />
+          <Property Name="current_fragment" Type="Int32" Nullable="false" />
+          <Property Name="sending_date" Type="Int64" Nullable="false" />
+          <Property Name="reserve" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="content" Relationship="CloudChatModel1.sharescontent_over_8000" FromRole="shares" ToRole="content_over_8000" />
+        </EntityType>
+        <EntityType Name="organizations">
+          <Key>
+            <PropertyRef Name="private_id" />
+            <PropertyRef Name="public_id" />
+            <PropertyRef Name="kb_of_credit" />
+          </Key>
+          <Property Name="private_id" Type="Guid" Nullable="false" />
+          <Property Name="public_id" Type="Guid" Nullable="false" />
+          <Property Name="kb_of_credit" Type="Int32" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="CloudChatEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="content_over_8000" EntityType="Self.content_over_8000" />
+          <EntitySet Name="group_members" EntityType="Self.group_members" />
+          <EntitySet Name="groups" EntityType="Self.groups" />
+          <EntitySet Name="members" EntityType="Self.members" />
+          <EntitySet Name="shares" EntityType="Self.shares" />
+          <EntitySet Name="organizations" EntityType="Self.organizations" />
           <FunctionImport Name="usp_content_over_8000Delete">
-          <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_content_over_8000Insert" ReturnType="Collection(CloudChatModel1.usp_content_over_8000Insert_Result)">
             <Parameter Name="id" Mode="In" Type="Int32" />
-            <Parameter Name="share_id" Mode="In" Type="Guid" />
+            <Parameter Name="shar_id" Mode="In" Type="Guid" />
             <Parameter Name="file_data" Mode="In" Type="Binary" />
           </FunctionImport>
           <FunctionImport Name="usp_content_over_8000Select" ReturnType="Collection(CloudChatModel1.usp_content_over_8000Select_Result)">
-          <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="usp_content_over_8000Update" ReturnType="Collection(CloudChatModel1.usp_content_over_8000Update_Result)">
+          <FunctionImport Name="usp_content_over_8000Update">
             <Parameter Name="id" Mode="In" Type="Int32" />
             <Parameter Name="shar_id" Mode="In" Type="Int32" />
             <Parameter Name="file_data" Mode="In" Type="Binary" />
           </FunctionImport>
           <FunctionImport Name="usp_content_under_8000Delete">
-          <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_content_under_8000Insert" ReturnType="Collection(CloudChatModel1.usp_content_under_8000Insert_Result)">
             <Parameter Name="id" Mode="In" Type="Int32" />
             <Parameter Name="file_data" Mode="In" Type="Binary" />
           </FunctionImport>
           <FunctionImport Name="usp_content_under_8000Select" ReturnType="Collection(CloudChatModel1.usp_content_under_8000Select_Result)">
-          <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_content_under_8000Update" ReturnType="Collection(CloudChatModel1.usp_content_under_8000Update_Result)">
             <Parameter Name="id" Mode="In" Type="Int32" />
@@ -277,7 +362,7 @@
             <Parameter Name="allow_or_deny" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="usp_groupsDelete">
-          <Parameter Name="group_id" Mode="In" Type="Guid" />
+            <Parameter Name="group_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_groupsInsert" ReturnType="Collection(CloudChatModel1.usp_groupsInsert_Result)">
             <Parameter Name="group_id" Mode="In" Type="Guid" />
@@ -287,7 +372,7 @@
             <Parameter Name="org_private_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_groupsSelect" ReturnType="Collection(CloudChatModel1.usp_groupsSelect_Result)">
-          <Parameter Name="group_id" Mode="In" Type="Guid" />
+            <Parameter Name="group_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_groupsUpdate" ReturnType="Collection(CloudChatModel1.usp_groupsUpdate_Result)">
             <Parameter Name="group_id" Mode="In" Type="Guid" />
@@ -297,7 +382,7 @@
             <Parameter Name="org_private_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_membersDelete">
-          <Parameter Name="public_id" Mode="In" Type="Guid" />
+            <Parameter Name="public_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_membersInsert" ReturnType="Collection(CloudChatModel1.usp_membersInsert_Result)">
             <Parameter Name="public_id" Mode="In" Type="Guid" />
@@ -311,7 +396,7 @@
             <Parameter Name="away_busy_ready" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="usp_membersSelect" ReturnType="Collection(CloudChatModel1.usp_membersSelect_Result)">
-          <Parameter Name="public_id" Mode="In" Type="Guid" />
+            <Parameter Name="public_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_membersUpdate" ReturnType="Collection(CloudChatModel1.usp_membersUpdate_Result)">
             <Parameter Name="public_id" Mode="In" Type="Guid" />
@@ -325,9 +410,10 @@
             <Parameter Name="away_busy_ready" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="usp_sharesDelete">
-          <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_sharesInsert" ReturnType="Collection(CloudChatModel1.usp_sharesInsert_Result)">
+            <Parameter Name="id" Mode="In" Type="Guid" />
             <Parameter Name="member_public" Mode="In" Type="Guid" />
             <Parameter Name="owner_private" Mode="In" Type="Guid" />
             <Parameter Name="org_public" Mode="In" Type="Guid" />
@@ -337,12 +423,16 @@
             <Parameter Name="kb_size" Mode="In" Type="Int32" />
             <Parameter Name="file_extention" Mode="In" Type="String" />
             <Parameter Name="self_one_or_group" Mode="In" Type="String" />
+            <Parameter Name="total_fragment" Mode="In" Type="Int32" />
+            <Parameter Name="current_fragment" Mode="In" Type="Int32" />
+            <Parameter Name="sending_date" Mode="In" Type="Int64" />
+            <Parameter Name="reserve" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="usp_sharesSelect" ReturnType="Collection(CloudChatModel1.usp_sharesSelect_Result)">
-          <Parameter Name="id" Mode="In" Type="Int32" />
+          <FunctionImport Name="usp_sharesSelect">
+            <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_sharesUpdate" ReturnType="Collection(CloudChatModel1.usp_sharesUpdate_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+            <Parameter Name="id" Mode="In" Type="Guid" />
             <Parameter Name="member_public" Mode="In" Type="Guid" />
             <Parameter Name="owner_private" Mode="In" Type="Guid" />
             <Parameter Name="org_public" Mode="In" Type="Guid" />
@@ -352,36 +442,28 @@
             <Parameter Name="kb_size" Mode="In" Type="Int32" />
             <Parameter Name="file_extention" Mode="In" Type="String" />
             <Parameter Name="self_one_or_group" Mode="In" Type="String" />
+            <Parameter Name="total_fragment" Mode="In" Type="Int32" />
+            <Parameter Name="current_fragment" Mode="In" Type="Int32" />
+            <Parameter Name="sending_date" Mode="In" Type="Int64" />
+            <Parameter Name="reserve" Mode="In" Type="String" />
           </FunctionImport>
-          <EntitySet Name="content_under_8000" EntityType="CloudChatModel1.content_under_8000" />
-          <EntitySet Name="group_members" EntityType="CloudChatModel1.group_members" />
-          <EntitySet Name="groups" EntityType="CloudChatModel1.groups" />
-          <EntitySet Name="members" EntityType="CloudChatModel1.members" />
-          <EntitySet Name="shares" EntityType="CloudChatModel1.shares" />
-          <EntitySet Name="organizations" EntityType="CloudChatModel1.organizations" />
-          <EntitySet Name="content_over_8000" EntityType="CloudChatModel1.content_over_8000" />
           <AssociationSet Name="sharescontent_over_8000" Association="CloudChatModel1.sharescontent_over_8000">
             <End Role="shares" EntitySet="shares" />
             <End Role="content_over_8000" EntitySet="content_over_8000" />
           </AssociationSet>
           <AssociationSet Name="groupsgroup_members" Association="CloudChatModel1.groupsgroup_members">
-            <End Role="groups" EntitySet="groups" />
-            <End Role="group_members" EntitySet="group_members" />
+            <End EntitySet="groups" Role="groups" />
+            <End EntitySet="group_members" Role="group_members" />
           </AssociationSet>
         </EntityContainer>
         <ComplexType Name="usp_content_over_8000Insert_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
-          <Property Type="Int32" Name="shar_id" Nullable="false" />
+          <Property Type="Guid" Name="shar_id" Nullable="false" />
           <Property Type="Binary" Name="file_data" Nullable="false" />
         </ComplexType>
         <ComplexType Name="usp_content_over_8000Select_Result">
           <Property Type="Int32" Name="id" Nullable="false" />
-          <Property Type="Int32" Name="shar_id" Nullable="false" />
-          <Property Type="Binary" Name="file_data" Nullable="false" />
-        </ComplexType>
-        <ComplexType Name="usp_content_over_8000Update_Result">
-          <Property Type="Int32" Name="id" Nullable="false" />
-          <Property Type="Int32" Name="shar_id" Nullable="false" />
+          <Property Type="Guid" Name="shar_id" Nullable="false" />
           <Property Type="Binary" Name="file_data" Nullable="false" />
         </ComplexType>
         <ComplexType Name="usp_content_under_8000Insert_Result">
@@ -469,7 +551,7 @@
           <Property Type="String" Name="away_busy_ready" Nullable="false" MaxLength="10" />
         </ComplexType>
         <ComplexType Name="usp_sharesInsert_Result">
-          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="Guid" Name="id" Nullable="false" />
           <Property Type="Guid" Name="member_public" Nullable="false" />
           <Property Type="Guid" Name="owner_private" Nullable="false" />
           <Property Type="Guid" Name="org_public" Nullable="false" />
@@ -479,21 +561,13 @@
           <Property Type="Int32" Name="kb_size" Nullable="false" />
           <Property Type="String" Name="file_extention" Nullable="false" MaxLength="10" />
           <Property Type="String" Name="self_one_or_group" Nullable="true" MaxLength="10" />
-        </ComplexType>
-        <ComplexType Name="usp_sharesSelect_Result">
-          <Property Type="Int32" Name="id" Nullable="false" />
-          <Property Type="Guid" Name="member_public" Nullable="false" />
-          <Property Type="Guid" Name="owner_private" Nullable="false" />
-          <Property Type="Guid" Name="org_public" Nullable="false" />
-          <Property Type="Guid" Name="org_private" Nullable="false" />
-          <Property Type="Guid" Name="to_public" Nullable="false" />
-          <Property Type="DateTime" Name="death_date" Nullable="false" />
-          <Property Type="Int32" Name="kb_size" Nullable="false" />
-          <Property Type="String" Name="file_extention" Nullable="false" MaxLength="10" />
-          <Property Type="String" Name="self_one_or_group" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="total_fragment" Nullable="false" />
+          <Property Type="Int32" Name="current_fragment" Nullable="false" />
+          <Property Type="Int64" Name="sending_date" Nullable="false" />
+          <Property Type="String" Name="reserve" Nullable="true" MaxLength="500" />
         </ComplexType>
         <ComplexType Name="usp_sharesUpdate_Result">
-          <Property Type="Int32" Name="id" Nullable="false" />
+          <Property Type="Guid" Name="id" Nullable="false" />
           <Property Type="Guid" Name="member_public" Nullable="false" />
           <Property Type="Guid" Name="owner_private" Nullable="false" />
           <Property Type="Guid" Name="org_public" Nullable="false" />
@@ -503,85 +577,11 @@
           <Property Type="Int32" Name="kb_size" Nullable="false" />
           <Property Type="String" Name="file_extention" Nullable="false" MaxLength="10" />
           <Property Type="String" Name="self_one_or_group" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="total_fragment" Nullable="false" />
+          <Property Type="Int32" Name="current_fragment" Nullable="false" />
+          <Property Type="Int64" Name="sending_date" Nullable="false" />
+          <Property Type="String" Name="reserve" Nullable="true" MaxLength="500" />
         </ComplexType>
-        <EntityType Name="content_under_8000">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" />
-          <Property Name="share_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="file_data" Type="Binary" Nullable="false" MaxLength="8000" FixedLength="false" />
-        </EntityType>
-        <EntityType Name="group_members">
-          <Key>
-            <PropertyRef Name="group_id" />
-            <PropertyRef Name="member_id" />
-          </Key>
-          <Property Name="group_id" Type="Guid" Nullable="false" />
-          <Property Name="member_id" Type="Guid" Nullable="false" />
-          <Property Name="allow_or_deny" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="groups" Relationship="CloudChatModel1.groupsgroup_members" FromRole="group_members" ToRole="groups" />
-        </EntityType>
-        <EntityType Name="groups">
-          <Key>
-            <PropertyRef Name="group_id" />
-          </Key>
-          <Property Name="group_id" Type="Guid" Nullable="false" />
-          <Property Name="group_name_part" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="owner_private_id" Type="Guid" Nullable="false" />
-          <Property Name="photo_fragment" Type="String" Nullable="false" MaxLength="8000" FixedLength="false" Unicode="false" />
-          <Property Name="org_private_id" Type="Guid" Nullable="false" />
-          <NavigationProperty Name="group_members" Relationship="CloudChatModel1.groupsgroup_members" FromRole="groups" ToRole="group_members" />
-        </EntityType>
-        <EntityType Name="members">
-          <Key>
-            <PropertyRef Name="public_id" />
-          </Key>
-          <Property Name="public_id" Type="Guid" Nullable="false" />
-          <Property Name="an" Type="Guid" Nullable="false" />
-          <Property Name="private_id" Type="Guid" Nullable="false" />
-          <Property Name="month_last_use" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="org_id" Type="Guid" Nullable="false" />
-          <Property Name="description_fragment" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="photo_fragment" Type="Binary" Nullable="false" MaxLength="8000" FixedLength="false" />
-          <Property Name="kb_bandwidth_used" Type="Int32" Nullable="false" />
-          <Property Name="away_busy_ready" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="shares">
-          <Key>
-            <PropertyRef Name="id" />
-          </Key>
-          <Property Name="id" Type="Guid" Nullable="false" />
-          <Property Name="member_public" Type="Guid" Nullable="false" />
-          <Property Name="owner_private" Type="Guid" Nullable="false" />
-          <Property Name="org_public" Type="Guid" Nullable="false" />
-          <Property Name="org_private" Type="Guid" Nullable="false" />
-          <Property Name="to_public" Type="Guid" Nullable="false" />
-          <Property Name="death_date" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="kb_size" Type="Int32" Nullable="false" />
-          <Property Name="file_extention" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="self_one_or_group" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="content" Relationship="CloudChatModel1.sharescontent_over_8000" FromRole="shares" ToRole="content_over_8000" />
-        </EntityType>
-        <EntityType Name="organizations">
-          <Key>
-            <PropertyRef Name="private_id" />
-            <PropertyRef Name="public_id" />
-            <PropertyRef Name="kb_of_credit" />
-          </Key>
-          <Property Name="private_id" Type="Guid" Nullable="false" />
-          <Property Name="public_id" Type="Guid" Nullable="false" />
-          <Property Name="kb_of_credit" Type="Int32" Nullable="false" />
-        </EntityType>
-        <EntityType Name="content_over_8000">
-          <Key>
-            <PropertyRef Name="share_id" />
-          </Key>
-          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="share_id" Type="Guid" Nullable="false" />
-          <Property Name="file_data" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
-          <NavigationProperty Name="shares" Relationship="CloudChatModel1.sharescontent_over_8000" FromRole="content_over_8000" ToRole="shares" />
-        </EntityType>
         <Association Name="sharescontent_over_8000">
           <End Type="CloudChatModel1.shares" Role="shares" Multiplicity="1" />
           <End Type="CloudChatModel1.content_over_8000" Role="content_over_8000" Multiplicity="1" />
@@ -590,13 +590,13 @@
               <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="content_over_8000">
-              <PropertyRef Name="share_id" />
+              <PropertyRef Name="shar_id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="groupsgroup_members">
-          <End Type="CloudChatModel1.groups" Role="groups" Multiplicity="1" />
-          <End Type="CloudChatModel1.group_members" Role="group_members" Multiplicity="*" />
+          <End Type="CloudChatModel1.groups" Multiplicity="1" Role="groups" />
+          <End Type="CloudChatModel1.group_members" Multiplicity="*" Role="group_members" />
           <ReferentialConstraint>
             <Principal Role="groups">
               <PropertyRef Name="group_id" />
@@ -611,9 +611,82 @@
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="Хранилище CloudChatModelContainer" CdmEntityContainer="CloudChatEntities">
-          <FunctionImportMapping FunctionImportName="usp_content_over_8000Delete" FunctionName="Хранилище CloudChatModel.usp_content_over_8000Delete" />
-          <FunctionImportMapping FunctionImportName="usp_content_over_8000Insert" FunctionName="Хранилище CloudChatModel.usp_content_over_8000Insert">
+        <EntityContainerMapping StorageEntityContainer="Хранилище CloudChatModel1Container" CdmEntityContainer="CloudChatEntities">
+          <EntitySetMapping Name="content_over_8000">
+            <EntityTypeMapping TypeName="CloudChatModel1.content_over_8000">
+              <MappingFragment StoreEntitySet="content_over_8000">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="shar_id" ColumnName="shar_id" />
+                <ScalarProperty Name="file_data" ColumnName="file_data" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="group_members">
+            <EntityTypeMapping TypeName="CloudChatModel1.group_members">
+              <MappingFragment StoreEntitySet="group_members">
+                <ScalarProperty Name="group_id" ColumnName="group_id" />
+                <ScalarProperty Name="member_id" ColumnName="member_id" />
+                <ScalarProperty Name="allow_or_deny" ColumnName="allow_or_deny" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="groups">
+            <EntityTypeMapping TypeName="CloudChatModel1.groups">
+              <MappingFragment StoreEntitySet="groups">
+                <ScalarProperty Name="group_id" ColumnName="group_id" />
+                <ScalarProperty Name="group_name_part" ColumnName="group_name_part" />
+                <ScalarProperty Name="owner_private_id" ColumnName="owner_private_id" />
+                <ScalarProperty Name="photo_fragment" ColumnName="photo_fragment" />
+                <ScalarProperty Name="org_private_id" ColumnName="org_private_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="members">
+            <EntityTypeMapping TypeName="CloudChatModel1.members">
+              <MappingFragment StoreEntitySet="members">
+                <ScalarProperty Name="public_id" ColumnName="public_id" />
+                <ScalarProperty Name="an" ColumnName="an" />
+                <ScalarProperty Name="private_id" ColumnName="private_id" />
+                <ScalarProperty Name="month_last_use" ColumnName="month_last_use" />
+                <ScalarProperty Name="org_id" ColumnName="org_id" />
+                <ScalarProperty Name="description_fragment" ColumnName="description_fragment" />
+                <ScalarProperty Name="photo_fragment" ColumnName="photo_fragment" />
+                <ScalarProperty Name="kb_bandwidth_used" ColumnName="kb_bandwidth_used" />
+                <ScalarProperty Name="away_busy_ready" ColumnName="away_busy_ready" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="shares">
+            <EntityTypeMapping TypeName="CloudChatModel1.shares">
+              <MappingFragment StoreEntitySet="shares">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="member_public" ColumnName="member_public" />
+                <ScalarProperty Name="owner_private" ColumnName="owner_private" />
+                <ScalarProperty Name="org_public" ColumnName="org_public" />
+                <ScalarProperty Name="org_private" ColumnName="org_private" />
+                <ScalarProperty Name="to_public" ColumnName="to_public" />
+                <ScalarProperty Name="death_date" ColumnName="death_date" />
+                <ScalarProperty Name="kb_size" ColumnName="kb_size" />
+                <ScalarProperty Name="file_extention" ColumnName="file_extention" />
+                <ScalarProperty Name="self_one_or_group" ColumnName="self_one_or_group" />
+                <ScalarProperty Name="total_fragment" ColumnName="total_fragment" />
+                <ScalarProperty Name="current_fragment" ColumnName="current_fragment" />
+                <ScalarProperty Name="sending_date" ColumnName="sending_date" />
+                <ScalarProperty Name="reserve" ColumnName="reserve" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="organizations">
+            <EntityTypeMapping TypeName="CloudChatModel1.organizations">
+              <MappingFragment StoreEntitySet="organizations">
+                <ScalarProperty Name="private_id" ColumnName="private_id" />
+                <ScalarProperty Name="public_id" ColumnName="public_id" />
+                <ScalarProperty Name="kb_of_credit" ColumnName="kb_of_credit" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_content_over_8000Delete" FunctionName="Хранилище CloudChatModel1.usp_content_over_8000Delete" />
+          <FunctionImportMapping FunctionImportName="usp_content_over_8000Insert" FunctionName="Хранилище CloudChatModel1.usp_content_over_8000Insert">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_content_over_8000Insert_Result">
                 <ScalarProperty Name="id" ColumnName="id" />
@@ -622,7 +695,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_content_over_8000Select" FunctionName="Хранилище CloudChatModel.usp_content_over_8000Select">
+          <FunctionImportMapping FunctionImportName="usp_content_over_8000Select" FunctionName="Хранилище CloudChatModel1.usp_content_over_8000Select">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_content_over_8000Select_Result">
                 <ScalarProperty Name="id" ColumnName="id" />
@@ -631,17 +704,9 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_content_over_8000Update" FunctionName="Хранилище CloudChatModel.usp_content_over_8000Update">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="CloudChatModel1.usp_content_over_8000Update_Result">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="shar_id" ColumnName="shar_id" />
-                <ScalarProperty Name="file_data" ColumnName="file_data" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_content_under_8000Delete" FunctionName="Хранилище CloudChatModel.usp_content_under_8000Delete" />
-          <FunctionImportMapping FunctionImportName="usp_content_under_8000Insert" FunctionName="Хранилище CloudChatModel.usp_content_under_8000Insert">
+          <FunctionImportMapping FunctionImportName="usp_content_over_8000Update" FunctionName="Хранилище CloudChatModel1.usp_content_over_8000Update" />
+          <FunctionImportMapping FunctionImportName="usp_content_under_8000Delete" FunctionName="Хранилище CloudChatModel1.usp_content_under_8000Delete" />
+          <FunctionImportMapping FunctionImportName="usp_content_under_8000Insert" FunctionName="Хранилище CloudChatModel1.usp_content_under_8000Insert">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_content_under_8000Insert_Result">
                 <ScalarProperty Name="id" ColumnName="id" />
@@ -650,7 +715,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_content_under_8000Select" FunctionName="Хранилище CloudChatModel.usp_content_under_8000Select">
+          <FunctionImportMapping FunctionImportName="usp_content_under_8000Select" FunctionName="Хранилище CloudChatModel1.usp_content_under_8000Select">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_content_under_8000Select_Result">
                 <ScalarProperty Name="id" ColumnName="id" />
@@ -659,7 +724,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_content_under_8000Update" FunctionName="Хранилище CloudChatModel.usp_content_under_8000Update">
+          <FunctionImportMapping FunctionImportName="usp_content_under_8000Update" FunctionName="Хранилище CloudChatModel1.usp_content_under_8000Update">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_content_under_8000Update_Result">
                 <ScalarProperty Name="id" ColumnName="id" />
@@ -668,8 +733,8 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_group_membersDelete" FunctionName="Хранилище CloudChatModel.usp_group_membersDelete" />
-          <FunctionImportMapping FunctionImportName="usp_group_membersInsert" FunctionName="Хранилище CloudChatModel.usp_group_membersInsert">
+          <FunctionImportMapping FunctionImportName="usp_group_membersDelete" FunctionName="Хранилище CloudChatModel1.usp_group_membersDelete" />
+          <FunctionImportMapping FunctionImportName="usp_group_membersInsert" FunctionName="Хранилище CloudChatModel1.usp_group_membersInsert">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_group_membersInsert_Result">
                 <ScalarProperty Name="group_id" ColumnName="group_id" />
@@ -678,7 +743,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_group_membersSelect" FunctionName="Хранилище CloudChatModel.usp_group_membersSelect">
+          <FunctionImportMapping FunctionImportName="usp_group_membersSelect" FunctionName="Хранилище CloudChatModel1.usp_group_membersSelect">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_group_membersSelect_Result">
                 <ScalarProperty Name="group_id" ColumnName="group_id" />
@@ -687,7 +752,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_group_membersUpdate" FunctionName="Хранилище CloudChatModel.usp_group_membersUpdate">
+          <FunctionImportMapping FunctionImportName="usp_group_membersUpdate" FunctionName="Хранилище CloudChatModel1.usp_group_membersUpdate">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_group_membersUpdate_Result">
                 <ScalarProperty Name="group_id" ColumnName="group_id" />
@@ -696,8 +761,8 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_groupsDelete" FunctionName="Хранилище CloudChatModel.usp_groupsDelete" />
-          <FunctionImportMapping FunctionImportName="usp_groupsInsert" FunctionName="Хранилище CloudChatModel.usp_groupsInsert">
+          <FunctionImportMapping FunctionImportName="usp_groupsDelete" FunctionName="Хранилище CloudChatModel1.usp_groupsDelete" />
+          <FunctionImportMapping FunctionImportName="usp_groupsInsert" FunctionName="Хранилище CloudChatModel1.usp_groupsInsert">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_groupsInsert_Result">
                 <ScalarProperty Name="group_id" ColumnName="group_id" />
@@ -708,7 +773,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_groupsSelect" FunctionName="Хранилище CloudChatModel.usp_groupsSelect">
+          <FunctionImportMapping FunctionImportName="usp_groupsSelect" FunctionName="Хранилище CloudChatModel1.usp_groupsSelect">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_groupsSelect_Result">
                 <ScalarProperty Name="group_id" ColumnName="group_id" />
@@ -719,7 +784,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_groupsUpdate" FunctionName="Хранилище CloudChatModel.usp_groupsUpdate">
+          <FunctionImportMapping FunctionImportName="usp_groupsUpdate" FunctionName="Хранилище CloudChatModel1.usp_groupsUpdate">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_groupsUpdate_Result">
                 <ScalarProperty Name="group_id" ColumnName="group_id" />
@@ -730,8 +795,8 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_membersDelete" FunctionName="Хранилище CloudChatModel.usp_membersDelete" />
-          <FunctionImportMapping FunctionImportName="usp_membersInsert" FunctionName="Хранилище CloudChatModel.usp_membersInsert">
+          <FunctionImportMapping FunctionImportName="usp_membersDelete" FunctionName="Хранилище CloudChatModel1.usp_membersDelete" />
+          <FunctionImportMapping FunctionImportName="usp_membersInsert" FunctionName="Хранилище CloudChatModel1.usp_membersInsert">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_membersInsert_Result">
                 <ScalarProperty Name="public_id" ColumnName="public_id" />
@@ -746,7 +811,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_membersSelect" FunctionName="Хранилище CloudChatModel.usp_membersSelect">
+          <FunctionImportMapping FunctionImportName="usp_membersSelect" FunctionName="Хранилище CloudChatModel1.usp_membersSelect">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_membersSelect_Result">
                 <ScalarProperty Name="public_id" ColumnName="public_id" />
@@ -761,7 +826,7 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_membersUpdate" FunctionName="Хранилище CloudChatModel.usp_membersUpdate">
+          <FunctionImportMapping FunctionImportName="usp_membersUpdate" FunctionName="Хранилище CloudChatModel1.usp_membersUpdate">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_membersUpdate_Result">
                 <ScalarProperty Name="public_id" ColumnName="public_id" />
@@ -776,8 +841,8 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_sharesDelete" FunctionName="Хранилище CloudChatModel.usp_sharesDelete" />
-          <FunctionImportMapping FunctionImportName="usp_sharesInsert" FunctionName="Хранилище CloudChatModel.usp_sharesInsert">
+          <FunctionImportMapping FunctionImportName="usp_sharesDelete" FunctionName="Хранилище CloudChatModel1.usp_sharesDelete" />
+          <FunctionImportMapping FunctionImportName="usp_sharesInsert" FunctionName="Хранилище CloudChatModel1.usp_sharesInsert">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_sharesInsert_Result">
                 <ScalarProperty Name="id" ColumnName="id" />
@@ -790,26 +855,15 @@
                 <ScalarProperty Name="kb_size" ColumnName="kb_size" />
                 <ScalarProperty Name="file_extention" ColumnName="file_extention" />
                 <ScalarProperty Name="self_one_or_group" ColumnName="self_one_or_group" />
+                <ScalarProperty Name="total_fragment" ColumnName="total_fragment" />
+                <ScalarProperty Name="current_fragment" ColumnName="current_fragment" />
+                <ScalarProperty Name="sending_date" ColumnName="sending_date" />
+                <ScalarProperty Name="reserve" ColumnName="reserve" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_sharesSelect" FunctionName="Хранилище CloudChatModel.usp_sharesSelect">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="CloudChatModel1.usp_sharesSelect_Result">
-                <ScalarProperty Name="id" ColumnName="id" />
-                <ScalarProperty Name="member_public" ColumnName="member_public" />
-                <ScalarProperty Name="owner_private" ColumnName="owner_private" />
-                <ScalarProperty Name="org_public" ColumnName="org_public" />
-                <ScalarProperty Name="org_private" ColumnName="org_private" />
-                <ScalarProperty Name="to_public" ColumnName="to_public" />
-                <ScalarProperty Name="death_date" ColumnName="death_date" />
-                <ScalarProperty Name="kb_size" ColumnName="kb_size" />
-                <ScalarProperty Name="file_extention" ColumnName="file_extention" />
-                <ScalarProperty Name="self_one_or_group" ColumnName="self_one_or_group" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_sharesUpdate" FunctionName="Хранилище CloudChatModel.usp_sharesUpdate">
+          <FunctionImportMapping FunctionImportName="usp_sharesSelect" FunctionName="Хранилище CloudChatModel1.usp_sharesSelect" />
+          <FunctionImportMapping FunctionImportName="usp_sharesUpdate" FunctionName="Хранилище CloudChatModel1.usp_sharesUpdate">
             <ResultMapping>
               <ComplexTypeMapping TypeName="CloudChatModel1.usp_sharesUpdate_Result">
                 <ScalarProperty Name="id" ColumnName="id" />
@@ -822,104 +876,31 @@
                 <ScalarProperty Name="kb_size" ColumnName="kb_size" />
                 <ScalarProperty Name="file_extention" ColumnName="file_extention" />
                 <ScalarProperty Name="self_one_or_group" ColumnName="self_one_or_group" />
+                <ScalarProperty Name="total_fragment" ColumnName="total_fragment" />
+                <ScalarProperty Name="current_fragment" ColumnName="current_fragment" />
+                <ScalarProperty Name="sending_date" ColumnName="sending_date" />
+                <ScalarProperty Name="reserve" ColumnName="reserve" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="content_under_8000">
-            <EntityTypeMapping TypeName="CloudChatModel1.content_under_8000">
-              <MappingFragment StoreEntitySet="content_under_8000">
-                <ScalarProperty Name="file_data" ColumnName="file_data" />
-                <ScalarProperty Name="share_id" ColumnName="share_id" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="group_members">
-            <EntityTypeMapping TypeName="CloudChatModel1.group_members">
-              <MappingFragment StoreEntitySet="group_members">
-                <ScalarProperty Name="allow_or_deny" ColumnName="allow_or_deny" />
-                <ScalarProperty Name="member_id" ColumnName="member_id" />
-                <ScalarProperty Name="group_id" ColumnName="group_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="groups">
-            <EntityTypeMapping TypeName="CloudChatModel1.groups">
-              <MappingFragment StoreEntitySet="groups">
-                <ScalarProperty Name="org_private_id" ColumnName="org_private_id" />
-                <ScalarProperty Name="photo_fragment" ColumnName="photo_fragment" />
-                <ScalarProperty Name="owner_private_id" ColumnName="owner_private_id" />
-                <ScalarProperty Name="group_name_part" ColumnName="group_name_part" />
-                <ScalarProperty Name="group_id" ColumnName="group_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="members">
-            <EntityTypeMapping TypeName="CloudChatModel1.members">
-              <MappingFragment StoreEntitySet="members">
-                <ScalarProperty Name="away_busy_ready" ColumnName="away_busy_ready" />
-                <ScalarProperty Name="kb_bandwidth_used" ColumnName="kb_bandwidth_used" />
-                <ScalarProperty Name="photo_fragment" ColumnName="photo_fragment" />
-                <ScalarProperty Name="description_fragment" ColumnName="description_fragment" />
-                <ScalarProperty Name="org_id" ColumnName="org_id" />
-                <ScalarProperty Name="month_last_use" ColumnName="month_last_use" />
-                <ScalarProperty Name="private_id" ColumnName="private_id" />
-                <ScalarProperty Name="an" ColumnName="an" />
-                <ScalarProperty Name="public_id" ColumnName="public_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="shares">
-            <EntityTypeMapping TypeName="CloudChatModel1.shares">
-              <MappingFragment StoreEntitySet="shares">
-                <ScalarProperty Name="self_one_or_group" ColumnName="self_one_or_group" />
-                <ScalarProperty Name="file_extention" ColumnName="file_extention" />
-                <ScalarProperty Name="kb_size" ColumnName="kb_size" />
-                <ScalarProperty Name="death_date" ColumnName="death_date" />
-                <ScalarProperty Name="to_public" ColumnName="to_public" />
-                <ScalarProperty Name="org_private" ColumnName="org_private" />
-                <ScalarProperty Name="org_public" ColumnName="org_public" />
-                <ScalarProperty Name="owner_private" ColumnName="owner_private" />
-                <ScalarProperty Name="member_public" ColumnName="member_public" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="organizations">
-            <EntityTypeMapping TypeName="CloudChatModel1.organizations">
-              <MappingFragment StoreEntitySet="organizations">
-                <ScalarProperty Name="kb_of_credit" ColumnName="kb_of_credit" />
-                <ScalarProperty Name="public_id" ColumnName="public_id" />
-                <ScalarProperty Name="private_id" ColumnName="private_id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="content_over_8000">
-            <EntityTypeMapping TypeName="CloudChatModel1.content_over_8000">
-              <MappingFragment StoreEntitySet="content_over_8000">
-                <ScalarProperty Name="file_data" ColumnName="file_data" />
-                <ScalarProperty Name="share_id" ColumnName="share_id" />
-                <ScalarProperty Name="id" ColumnName="id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <AssociationSetMapping Name="sharescontent_over_8000" TypeName="CloudChatModel1.sharescontent_over_8000" StoreEntitySet="shares">
             <EndProperty Name="content_over_8000">
-              <ScalarProperty Name="share_id" ColumnName="id" />
+              <ScalarProperty Name="shar_id" ColumnName="id" />
             </EndProperty>
             <EndProperty Name="shares">
               <ScalarProperty Name="id" ColumnName="id" />
             </EndProperty>
           </AssociationSetMapping>
-          <AssociationSetMapping Name="groupsgroup_members" TypeName="CloudChatModel1.groupsgroup_members" StoreEntitySet="groups">
+          <AssociationSetMapping Name="groupsgroup_members" TypeName="CloudChatModel1.groupsgroup_members" StoreEntitySet="group_members">
             <EndProperty Name="group_members">
+              <ScalarProperty Name="member_id" ColumnName="member_id" />
               <ScalarProperty Name="group_id" ColumnName="group_id" />
             </EndProperty>
             <EndProperty Name="groups">
               <ScalarProperty Name="group_id" ColumnName="group_id" />
             </EndProperty>
           </AssociationSetMapping>
-          </EntityContainerMapping>
+        </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

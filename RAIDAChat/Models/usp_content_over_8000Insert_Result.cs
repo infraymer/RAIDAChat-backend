@@ -14,7 +14,7 @@ namespace RAIDAChat.Models
     public partial class usp_content_over_8000Insert_Result
     {
         public int id { get; set; }
-        public int shar_id { get; set; }
+        public System.Guid shar_id { get; set; }
         public byte[] file_data { get; set; }
     }
 }

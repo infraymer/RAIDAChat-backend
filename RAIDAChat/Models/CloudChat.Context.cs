@@ -27,13 +27,12 @@ namespace RAIDAChat.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<content_under_8000> content_under_8000 { get; set; }
+        public virtual DbSet<content_over_8000> content_over_8000 { get; set; }
         public virtual DbSet<group_members> group_members { get; set; }
         public virtual DbSet<groups> groups { get; set; }
         public virtual DbSet<members> members { get; set; }
         public virtual DbSet<shares> shares { get; set; }
         public virtual DbSet<organizations> organizations { get; set; }
-        public virtual DbSet<content_over_8000> content_over_8000 { get; set; }
     
         public virtual int usp_content_over_8000Delete(Nullable<int> id)
         {
@@ -44,21 +43,21 @@ namespace RAIDAChat.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_content_over_8000Delete", idParameter);
         }
     
-        public virtual ObjectResult<usp_content_over_8000Insert_Result> usp_content_over_8000Insert(Nullable<int> id, Nullable<System.Guid> share_id, byte[] file_data)
+        public virtual ObjectResult<usp_content_over_8000Insert_Result> usp_content_over_8000Insert(Nullable<int> id, Nullable<System.Guid> shar_id, byte[] file_data)
         {
             var idParameter = id.HasValue ?
                 new ObjectParameter("id", id) :
                 new ObjectParameter("id", typeof(int));
     
-            var share_idParameter = share_id.HasValue ?
-                new ObjectParameter("share_id", share_id) :
-                new ObjectParameter("share_id", typeof(System.Guid));
+            var shar_idParameter = shar_id.HasValue ?
+                new ObjectParameter("shar_id", shar_id) :
+                new ObjectParameter("shar_id", typeof(System.Guid));
     
             var file_dataParameter = file_data != null ?
                 new ObjectParameter("file_data", file_data) :
                 new ObjectParameter("file_data", typeof(byte[]));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_content_over_8000Insert_Result>("usp_content_over_8000Insert", idParameter, share_idParameter, file_dataParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_content_over_8000Insert_Result>("usp_content_over_8000Insert", idParameter, shar_idParameter, file_dataParameter);
         }
     
         public virtual ObjectResult<usp_content_over_8000Select_Result> usp_content_over_8000Select(Nullable<int> id)
@@ -70,7 +69,7 @@ namespace RAIDAChat.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_content_over_8000Select_Result>("usp_content_over_8000Select", idParameter);
         }
     
-        public virtual ObjectResult<usp_content_over_8000Update_Result> usp_content_over_8000Update(Nullable<int> id, Nullable<int> shar_id, byte[] file_data)
+        public virtual int usp_content_over_8000Update(Nullable<int> id, Nullable<int> shar_id, byte[] file_data)
         {
             var idParameter = id.HasValue ?
                 new ObjectParameter("id", id) :
@@ -84,7 +83,7 @@ namespace RAIDAChat.Models
                 new ObjectParameter("file_data", file_data) :
                 new ObjectParameter("file_data", typeof(byte[]));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_content_over_8000Update_Result>("usp_content_over_8000Update", idParameter, shar_idParameter, file_dataParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_content_over_8000Update", idParameter, shar_idParameter, file_dataParameter);
         }
     
         public virtual int usp_content_under_8000Delete(Nullable<int> id)
@@ -372,61 +371,11 @@ namespace RAIDAChat.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_sharesDelete", idParameter);
         }
     
-        public virtual ObjectResult<usp_sharesInsert_Result> usp_sharesInsert(Nullable<System.Guid> member_public, Nullable<System.Guid> owner_private, Nullable<System.Guid> org_public, Nullable<System.Guid> org_private, Nullable<System.Guid> to_public, Nullable<System.DateTime> death_date, Nullable<int> kb_size, string file_extention, string self_one_or_group)
-        {
-            var member_publicParameter = member_public.HasValue ?
-                new ObjectParameter("member_public", member_public) :
-                new ObjectParameter("member_public", typeof(System.Guid));
-    
-            var owner_privateParameter = owner_private.HasValue ?
-                new ObjectParameter("owner_private", owner_private) :
-                new ObjectParameter("owner_private", typeof(System.Guid));
-    
-            var org_publicParameter = org_public.HasValue ?
-                new ObjectParameter("org_public", org_public) :
-                new ObjectParameter("org_public", typeof(System.Guid));
-    
-            var org_privateParameter = org_private.HasValue ?
-                new ObjectParameter("org_private", org_private) :
-                new ObjectParameter("org_private", typeof(System.Guid));
-    
-            var to_publicParameter = to_public.HasValue ?
-                new ObjectParameter("to_public", to_public) :
-                new ObjectParameter("to_public", typeof(System.Guid));
-    
-            var death_dateParameter = death_date.HasValue ?
-                new ObjectParameter("death_date", death_date) :
-                new ObjectParameter("death_date", typeof(System.DateTime));
-    
-            var kb_sizeParameter = kb_size.HasValue ?
-                new ObjectParameter("kb_size", kb_size) :
-                new ObjectParameter("kb_size", typeof(int));
-    
-            var file_extentionParameter = file_extention != null ?
-                new ObjectParameter("file_extention", file_extention) :
-                new ObjectParameter("file_extention", typeof(string));
-    
-            var self_one_or_groupParameter = self_one_or_group != null ?
-                new ObjectParameter("self_one_or_group", self_one_or_group) :
-                new ObjectParameter("self_one_or_group", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_sharesInsert_Result>("usp_sharesInsert", member_publicParameter, owner_privateParameter, org_publicParameter, org_privateParameter, to_publicParameter, death_dateParameter, kb_sizeParameter, file_extentionParameter, self_one_or_groupParameter);
-        }
-    
-        public virtual ObjectResult<usp_sharesSelect_Result> usp_sharesSelect(Nullable<int> id)
+        public virtual ObjectResult<usp_sharesInsert_Result> usp_sharesInsert(Nullable<System.Guid> id, Nullable<System.Guid> member_public, Nullable<System.Guid> owner_private, Nullable<System.Guid> org_public, Nullable<System.Guid> org_private, Nullable<System.Guid> to_public, Nullable<System.DateTime> death_date, Nullable<int> kb_size, string file_extention, string self_one_or_group, Nullable<int> total_fragment, Nullable<int> current_fragment, Nullable<long> sending_date, string reserve)
         {
             var idParameter = id.HasValue ?
                 new ObjectParameter("id", id) :
-                new ObjectParameter("id", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_sharesSelect_Result>("usp_sharesSelect", idParameter);
-        }
-    
-        public virtual ObjectResult<usp_sharesUpdate_Result> usp_sharesUpdate(Nullable<int> id, Nullable<System.Guid> member_public, Nullable<System.Guid> owner_private, Nullable<System.Guid> org_public, Nullable<System.Guid> org_private, Nullable<System.Guid> to_public, Nullable<System.DateTime> death_date, Nullable<int> kb_size, string file_extention, string self_one_or_group)
-        {
-            var idParameter = id.HasValue ?
-                new ObjectParameter("id", id) :
-                new ObjectParameter("id", typeof(int));
+                new ObjectParameter("id", typeof(System.Guid));
     
             var member_publicParameter = member_public.HasValue ?
                 new ObjectParameter("member_public", member_public) :
@@ -464,7 +413,93 @@ namespace RAIDAChat.Models
                 new ObjectParameter("self_one_or_group", self_one_or_group) :
                 new ObjectParameter("self_one_or_group", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_sharesUpdate_Result>("usp_sharesUpdate", idParameter, member_publicParameter, owner_privateParameter, org_publicParameter, org_privateParameter, to_publicParameter, death_dateParameter, kb_sizeParameter, file_extentionParameter, self_one_or_groupParameter);
+            var total_fragmentParameter = total_fragment.HasValue ?
+                new ObjectParameter("total_fragment", total_fragment) :
+                new ObjectParameter("total_fragment", typeof(int));
+    
+            var current_fragmentParameter = current_fragment.HasValue ?
+                new ObjectParameter("current_fragment", current_fragment) :
+                new ObjectParameter("current_fragment", typeof(int));
+    
+            var sending_dateParameter = sending_date.HasValue ?
+                new ObjectParameter("sending_date", sending_date) :
+                new ObjectParameter("sending_date", typeof(long));
+    
+            var reserveParameter = reserve != null ?
+                new ObjectParameter("reserve", reserve) :
+                new ObjectParameter("reserve", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_sharesInsert_Result>("usp_sharesInsert", idParameter, member_publicParameter, owner_privateParameter, org_publicParameter, org_privateParameter, to_publicParameter, death_dateParameter, kb_sizeParameter, file_extentionParameter, self_one_or_groupParameter, total_fragmentParameter, current_fragmentParameter, sending_dateParameter, reserveParameter);
+        }
+    
+        public virtual int usp_sharesSelect(Nullable<int> id)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_sharesSelect", idParameter);
+        }
+    
+        public virtual ObjectResult<usp_sharesUpdate_Result> usp_sharesUpdate(Nullable<System.Guid> id, Nullable<System.Guid> member_public, Nullable<System.Guid> owner_private, Nullable<System.Guid> org_public, Nullable<System.Guid> org_private, Nullable<System.Guid> to_public, Nullable<System.DateTime> death_date, Nullable<int> kb_size, string file_extention, string self_one_or_group, Nullable<int> total_fragment, Nullable<int> current_fragment, Nullable<long> sending_date, string reserve)
+        {
+            var idParameter = id.HasValue ?
+                new ObjectParameter("id", id) :
+                new ObjectParameter("id", typeof(System.Guid));
+    
+            var member_publicParameter = member_public.HasValue ?
+                new ObjectParameter("member_public", member_public) :
+                new ObjectParameter("member_public", typeof(System.Guid));
+    
+            var owner_privateParameter = owner_private.HasValue ?
+                new ObjectParameter("owner_private", owner_private) :
+                new ObjectParameter("owner_private", typeof(System.Guid));
+    
+            var org_publicParameter = org_public.HasValue ?
+                new ObjectParameter("org_public", org_public) :
+                new ObjectParameter("org_public", typeof(System.Guid));
+    
+            var org_privateParameter = org_private.HasValue ?
+                new ObjectParameter("org_private", org_private) :
+                new ObjectParameter("org_private", typeof(System.Guid));
+    
+            var to_publicParameter = to_public.HasValue ?
+                new ObjectParameter("to_public", to_public) :
+                new ObjectParameter("to_public", typeof(System.Guid));
+    
+            var death_dateParameter = death_date.HasValue ?
+                new ObjectParameter("death_date", death_date) :
+                new ObjectParameter("death_date", typeof(System.DateTime));
+    
+            var kb_sizeParameter = kb_size.HasValue ?
+                new ObjectParameter("kb_size", kb_size) :
+                new ObjectParameter("kb_size", typeof(int));
+    
+            var file_extentionParameter = file_extention != null ?
+                new ObjectParameter("file_extention", file_extention) :
+                new ObjectParameter("file_extention", typeof(string));
+    
+            var self_one_or_groupParameter = self_one_or_group != null ?
+                new ObjectParameter("self_one_or_group", self_one_or_group) :
+                new ObjectParameter("self_one_or_group", typeof(string));
+    
+            var total_fragmentParameter = total_fragment.HasValue ?
+                new ObjectParameter("total_fragment", total_fragment) :
+                new ObjectParameter("total_fragment", typeof(int));
+    
+            var current_fragmentParameter = current_fragment.HasValue ?
+                new ObjectParameter("current_fragment", current_fragment) :
+                new ObjectParameter("current_fragment", typeof(int));
+    
+            var sending_dateParameter = sending_date.HasValue ?
+                new ObjectParameter("sending_date", sending_date) :
+                new ObjectParameter("sending_date", typeof(long));
+    
+            var reserveParameter = reserve != null ?
+                new ObjectParameter("reserve", reserve) :
+                new ObjectParameter("reserve", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_sharesUpdate_Result>("usp_sharesUpdate", idParameter, member_publicParameter, owner_privateParameter, org_publicParameter, org_privateParameter, to_publicParameter, death_dateParameter, kb_sizeParameter, file_extentionParameter, self_one_or_groupParameter, total_fragmentParameter, current_fragmentParameter, sending_dateParameter, reserveParameter);
         }
     }
 }

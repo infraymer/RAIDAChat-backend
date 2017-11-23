@@ -24,6 +24,10 @@ namespace RAIDAChat.Models
         public int kb_size { get; set; }
         public string file_extention { get; set; }
         public string self_one_or_group { get; set; }
+        public int total_fragment { get; set; }
+        public int current_fragment { get; set; }
+        public long sending_date { get; set; }
+        public string reserve { get; set; }
     
         public virtual content_over_8000 content { get; set; }
     }

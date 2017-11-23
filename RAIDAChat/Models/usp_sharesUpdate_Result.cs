@@ -13,7 +13,7 @@ namespace RAIDAChat.Models
     
     public partial class usp_sharesUpdate_Result
     {
-        public int id { get; set; }
+        public System.Guid id { get; set; }
         public System.Guid member_public { get; set; }
         public System.Guid owner_private { get; set; }
         public System.Guid org_public { get; set; }
@@ -23,5 +23,9 @@ namespace RAIDAChat.Models
         public int kb_size { get; set; }
         public string file_extention { get; set; }
         public string self_one_or_group { get; set; }
+        public int total_fragment { get; set; }
+        public int current_fragment { get; set; }
+        public long sending_date { get; set; }
+        public string reserve { get; set; }
     }
 }

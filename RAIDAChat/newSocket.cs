@@ -77,7 +77,7 @@ namespace RAIDAChat
             }
 
             //Авторизация 
-            if (socketMessage.execFun.Equals("subscribe", StringComparison.CurrentCultureIgnoreCase))
+            if (socketMessage.execFun.Equals("authorization", StringComparison.CurrentCultureIgnoreCase))
             {
                 AuthInfoWithSocket inf = (new MainAction()).Auth(socketMessage.data);
                 if (inf.auth)
@@ -145,7 +145,7 @@ namespace RAIDAChat
                 {
                     outputSocket = new OutputSocketMessage(socketMessage.execFun,
                                     false,
-                                    "Сначала необходимо подписаться на уведомления (Можно сказать это авторизация)",
+                                    "Вы не авторизированы. Для продолжения работы необходимо авторизоваться",
                                     new { }
                                 );
                     SendMessage(session, JsonConvert.SerializeObject(outputSocket));

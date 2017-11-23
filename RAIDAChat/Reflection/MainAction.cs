@@ -306,7 +306,10 @@ namespace RAIDAChat.ReflectionClass
                                 "recipientId": "788FEFAD0ED24436AD73D968685110E8",     
                                 "toGroup": "false",
                                 "textMsg": "test message for one user",
-                                "guidMsg": "91D8333FA55B40AFB46CA63E214C93C8"
+                                "guidMsg": "91D8333FA55B40AFB46CA63E214C93C8",
+                                "sendTime": "1511450497620",
+                                "curFrg":"1",
+                                "totalFrg":"2"
                             }
                         }
 
@@ -318,7 +321,10 @@ namespace RAIDAChat.ReflectionClass
                                 "recipientId": "48A0CA0657DE4FB09CDC86008B2A8EBE",     
                                 "toGroup": "true",
                                 "textMsg": "test message for group",
-                                "guidMsg": "CA5BBD6B488941FEACFA19692D3087E0"
+                                "guidMsg": "CA5BBD6B488941FEACFA19692D3087E0",
+                                "sendTime": "1511450497620",
+                                "curFrg":"1",
+                                "totalFrg":"2"
                             }
                         }
                         {
@@ -329,7 +335,10 @@ namespace RAIDAChat.ReflectionClass
                                 "recipientId": "80f7efc032dd4a7c97f69fca51ad3000",     
                                 "toGroup": "false",
                                 "textMsg": "response fo test message",
-                                "guidMsg": "19D2B66BB477467ABAE72AC79F5A2C48"
+                                "guidMsg": "19D2B66BB477467ABAE72AC79F5A2C48",
+                                "sendTime": "1511450497620",
+                                "curFrg":"1",
+                                "totalFrg":"2"
                             }
                         }
                         {
@@ -340,7 +349,10 @@ namespace RAIDAChat.ReflectionClass
                                 "recipientId": "48A0CA0657DE4FB09CDC86008B2A8EBE",
                                 "toGroup": "true",
                                 "textMsg": "response for group test message",
-                                "guidMsg": "3D45AF8702CA4857A03D7EBD90D95C89"
+                                "guidMsg": "3D45AF8702CA4857A03D7EBD90D95C89",
+                                "sendTime": "1511450497620",
+                                "curFrg":"1",
+                                "totalFrg":"2"
                             }
                         }
                         */
@@ -397,7 +409,7 @@ namespace RAIDAChat.ReflectionClass
                 {
 
                     content_over_8000 msg = new content_over_8000();
-                    msg.share_id = info.msgId;
+                    msg.shar_id = info.msgId;
                     msg.file_data = Encoding.Unicode.GetBytes(info.textMsg);
                     db.content_over_8000.Add(msg);
 
@@ -407,6 +419,9 @@ namespace RAIDAChat.ReflectionClass
                     newShare.to_public = info.recipientId;
                     newShare.self_one_or_group = info.toGroup.ToString();
                     newShare.content = msg;
+                    newShare.current_fragment = info.curFrg;
+                    newShare.total_fragment = info.totalFrg;
+                    newShare.sending_date = info.sendTime;
 
                     newShare.file_extention = "none";
 
@@ -415,7 +430,7 @@ namespace RAIDAChat.ReflectionClass
                     db.SaveChanges();
 
 
-                    outputForOther = new OutGetMsgInfo(info.msgId, info.textMsg, myPublicLogin, info.toGroup.ToString(), info.recipientId);
+                    outputForOther = new OutGetMsgInfo(info.msgId, info.textMsg, myPublicLogin, info.toGroup.ToString(), info.recipientId, info.sendTime, info.curFrg, info.totalFrg);
 
                     if (info.toGroup)
                     {
@@ -529,7 +544,7 @@ namespace RAIDAChat.ReflectionClass
                 {
 
                     var msgInfoList = from s in db.shares
-                                    join content in db.content_over_8000 on s.id equals content.share_id
+                                    join content in db.content_over_8000 on s.id equals content.shar_id
                                     where s.owner_private == owner.private_id ||
                                             (s.to_public == owner.public_id && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase)) ||
                                             (myListGroupId.Contains(s.to_public) && s.self_one_or_group.Equals("true", StringComparison.InvariantCultureIgnoreCase))
@@ -539,7 +554,10 @@ namespace RAIDAChat.ReflectionClass
                                         textMsg = content.file_data,
                                         sender = s.owner_private,
                                         gr = s.self_one_or_group,
-                                        recip = s.to_public
+                                        recip = s.to_public,
+                                        time = s.sending_date,
+                                        cur = s.current_fragment,
+                                        total = s.total_fragment
                                     };
 
                     foreach (var item in msgInfoList)
@@ -550,7 +568,10 @@ namespace RAIDAChat.ReflectionClass
                                 Encoding.Unicode.GetString(item.textMsg),
                                 db.members.First(it => it.private_id == item.sender).public_id,
                                 item.gr,
-                                item.recip
+                                item.recip,
+                                item.time,
+                                item.cur,
+                                item.total
                             )
                         );
                     }
@@ -570,7 +591,7 @@ namespace RAIDAChat.ReflectionClass
                         }
                         else {
                             var msgInfoList = from s in db.shares
-                                            join content in db.content_over_8000 on s.id equals content.share_id
+                                            join content in db.content_over_8000 on s.id equals content.shar_id
                                             where (s.to_public == info.onlyId && s.self_one_or_group.Equals("true", StringComparison.InvariantCultureIgnoreCase)) 
                                             select new
                                                     {
@@ -578,7 +599,10 @@ namespace RAIDAChat.ReflectionClass
                                                         textMsg = content.file_data,
                                                         sender = s.owner_private,
                                                         gr = s.self_one_or_group,
-                                                        recip = s.to_public
+                                                        recip = s.to_public,
+                                                        time = s.sending_date,
+                                                        cur = s.current_fragment,
+                                                        total = s.total_fragment
                                                     };
 
                             foreach (var item in msgInfoList)
@@ -589,7 +613,10 @@ namespace RAIDAChat.ReflectionClass
                                         Encoding.Unicode.GetString(item.textMsg),
                                         db.members.First(it => it.private_id == item.sender).public_id,
                                         item.gr,
-                                        item.recip
+                                        item.recip,
+                                        item.time,
+                                        item.cur,
+                                        item.total
                                     )
                                 );
                             }
@@ -605,7 +632,7 @@ namespace RAIDAChat.ReflectionClass
                     else
                     {
                         var msgInfoList = from s in db.shares
-                                        join content in db.content_over_8000 on s.id equals content.share_id
+                                        join content in db.content_over_8000 on s.id equals content.shar_id
                                         where (s.owner_private == owner.private_id && s.to_public == info.onlyId && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase)) ||
                                             (s.owner_private == db.members.FirstOrDefault(it=>it.public_id==info.onlyId).private_id && s.to_public == owner.public_id && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase))
                                         select new
@@ -614,7 +641,10 @@ namespace RAIDAChat.ReflectionClass
                                             textMsg = content.file_data,
                                             sender = s.owner_private,
                                             gr = s.self_one_or_group,
-                                            recip = s.to_public
+                                            recip = s.to_public,
+                                            time = s.sending_date,
+                                            cur = s.current_fragment,
+                                            total = s.total_fragment
                                         };
 
                         foreach (var item in msgInfoList)
@@ -625,7 +655,10 @@ namespace RAIDAChat.ReflectionClass
                                     Encoding.Unicode.GetString(item.textMsg),
                                     db.members.First(it => it.private_id == item.sender).public_id,
                                     item.gr,
-                                    item.recip
+                                    item.recip,
+                                    item.time,
+                                    item.cur,
+                                    item.total
                                 )
                             );
                         }

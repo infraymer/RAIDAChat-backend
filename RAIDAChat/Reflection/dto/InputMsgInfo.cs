@@ -13,6 +13,10 @@ namespace RAIDAChat.Reflection.dto
         public bool toGroup { get; set; }
         public string textMsg { get; set; }
 
+        public int curFrg { get; set; }
+        public int totalFrg { get; set; }
+        public long sendTime { get; set; }
+
         [JsonProperty(PropertyName = "guidMsg")]
         public Guid msgId { get; set; }
     }

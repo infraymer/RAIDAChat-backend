@@ -22,31 +22,23 @@ namespace RAIDAChat.Reflection.dto
 
         public Guid recipient { get; set; }
 
-        public OutGetMsgInfo()
-        {
+        public int curFrg { get; set; }
+        public int totalFrg { get; set; }
+        public long sendTime { get; set; }
 
-        }
+        public OutGetMsgInfo() {}
 
-        public OutGetMsgInfo(Guid guidMsg, string textMsg, Guid sender, string group, Guid recipient)
+        public OutGetMsgInfo(Guid guidMsg, string textMsg, Guid sender, string group, Guid recipient, long _time, int curFrg, int totalFrg)
         {
             this.guidMsg = guidMsg;
             this.textMsg = textMsg;
             this.sender = sender;
             this.group = group;
             this.recipient = recipient;
+            this.sendTime = _time;
+            this.curFrg = curFrg;
+            this.totalFrg = totalFrg;
         }
     }
-
-
-    //public class OutGetMsgInfoForOtherUser: OutGetMsgInfo
-    //{
-    //    public Guid recipient { get; set; }
-
-    //    public OutGetMsgInfoForOtherUser(Guid guidMsg, string textMsg, Guid sender, string group, Guid recipient) :base(guidMsg, textMsg, sender, group)
-    //    {
-    //        this.recipient = recipient;
-    //    }
-
-    //}
 
 }

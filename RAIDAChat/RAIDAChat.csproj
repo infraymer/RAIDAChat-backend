@@ -211,9 +211,6 @@
     <Compile Include="Models\content_over_8000.cs">
       <DependentUpon>CloudChat.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\content_under_8000.cs">
-      <DependentUpon>CloudChat.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\groups.cs">
       <DependentUpon>CloudChat.tt</DependentUpon>
     </Compile>
@@ -233,9 +230,6 @@
       <DependentUpon>CloudChat.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\usp_content_over_8000Select_Result.cs">
-      <DependentUpon>CloudChat.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\usp_content_over_8000Update_Result.cs">
       <DependentUpon>CloudChat.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\usp_content_under_8000Insert_Result.cs">
@@ -277,9 +271,6 @@
     <Compile Include="Models\usp_sharesInsert_Result.cs">
       <DependentUpon>CloudChat.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\usp_sharesSelect_Result.cs">
-      <DependentUpon>CloudChat.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\usp_sharesUpdate_Result.cs">
       <DependentUpon>CloudChat.tt</DependentUpon>
     </Compile>
@@ -301,8 +292,8 @@
     <Content Include="Global.asax" />
     <Content Include="Models\CloudChat.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>CloudChat.Context.cs</LastGenOutput>
       <DependentUpon>CloudChat.edmx</DependentUpon>
+      <LastGenOutput>CloudChat.Context.cs</LastGenOutput>
     </Content>
     <Content Include="Models\CloudChat.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
@@ -314,6 +305,8 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Config\log4net.unix.config" />
+    <Content Include="Config\log4net.config" />
     <EntityDeploy Include="Models\CloudChat.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>CloudChat.Designer.cs</LastGenOutput>
@@ -321,8 +314,6 @@
     <Content Include="Models\CloudChat.edmx.diagram">
       <DependentUpon>CloudChat.edmx</DependentUpon>
     </Content>
-    <Content Include="Config\log4net.unix.config" />
-    <Content Include="Config\log4net.config" />
     <None Include="Properties\PublishProfiles\rcn1.pubxml" />
     <None Include="Properties\PublishProfiles\rcn2.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />

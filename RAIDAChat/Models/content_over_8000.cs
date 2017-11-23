@@ -15,7 +15,7 @@ namespace RAIDAChat.Models
     public partial class content_over_8000
     {
         public int id { get; set; }
-        public System.Guid share_id { get; set; }
+        public System.Guid shar_id { get; set; }
         public byte[] file_data { get; set; }
     
         public virtual shares shares { get; set; }
