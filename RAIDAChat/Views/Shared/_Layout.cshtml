@@ -7,28 +7,46 @@
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
 </head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                
+        <div class="container-fluid body-content">
+            <div class="navbar-header">              
                 @Html.ActionLink("Страница тестовой реализации RAIDAChat", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             
+            @*<div class="navbar-header pull-right" style="margin-top:7px">
+                <button id="btn_newProfile" class="btn btn-primary" aria-label="Left Align" >
+                    <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    New profile
+                </button>
+                <button class="btn btn-warning " id="btn_reconnect" title="Reconnect and Logout">
+                    <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                </button>
+            </div>*@
+
         </div>
     </div>
-    <div class="container body-content">
+    <div class="container-fluid body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year – RAIDA</p>
-        </footer>
+        
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
+    <div class="navbar-fixed-bottom">
+        <div class="navbar-inner">
+            <div class="container-fluid body-content">
+                <hr />
+                <footer>
+                    <p>&copy; @DateTime.Now.Year – RAIDA</p>
+                </footer>
+            </div>
+        </div>
+    </div>
+
+   
 </body>
 </html>

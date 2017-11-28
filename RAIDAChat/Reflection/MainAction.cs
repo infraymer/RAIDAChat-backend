@@ -44,7 +44,7 @@ namespace RAIDAChat.ReflectionClass
             #region Тестовые данные
             /*
              {
-                "execFun": "subscribe",
+                "execFun": "authorization",
                 "data": {
                     "login": "80f7efc032dd4a7c97f69fca51ad3000",
                     "an": "d842703c8acb4bd893876d700f60683e"
@@ -265,7 +265,7 @@ namespace RAIDAChat.ReflectionClass
                         {
                             db.usp_group_membersInsert(info.groupId, memberId, "I don't known");
                             rez.usersId.Add(info.memberId);
-                            rez.msgForOther = new { action = "You added in group" };
+                            rez.msgForOther = new { callFunction = "You added in group" };
                         }
                     }
                     else
@@ -457,9 +457,10 @@ namespace RAIDAChat.ReflectionClass
                 //    return rez;
                 //}
             }
-
+            output.data = outputForOther;
             rez.msgForOwner = output;
-            rez.msgForOther = new { action="newMessage", data = outputForOther } ;
+            rez.msgForOther = output;
+           // rez.msgForOther = new { callFunction="newMessage", data = outputForOther } ;
             return rez;
         }
 
@@ -548,6 +549,7 @@ namespace RAIDAChat.ReflectionClass
                                     where s.owner_private == owner.private_id ||
                                             (s.to_public == owner.public_id && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase)) ||
                                             (myListGroupId.Contains(s.to_public) && s.self_one_or_group.Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                                    orderby s.sending_date descending
                                     select new
                                     {
                                         guidMsg = s.id,
@@ -592,7 +594,8 @@ namespace RAIDAChat.ReflectionClass
                         else {
                             var msgInfoList = from s in db.shares
                                             join content in db.content_over_8000 on s.id equals content.shar_id
-                                            where (s.to_public == info.onlyId && s.self_one_or_group.Equals("true", StringComparison.InvariantCultureIgnoreCase)) 
+                                            where (s.to_public == info.onlyId && s.self_one_or_group.Equals("true", StringComparison.InvariantCultureIgnoreCase))
+                                            orderby s.sending_date descending
                                             select new
                                                     {
                                                         guidMsg = s.id,
@@ -635,6 +638,7 @@ namespace RAIDAChat.ReflectionClass
                                         join content in db.content_over_8000 on s.id equals content.shar_id
                                         where (s.owner_private == owner.private_id && s.to_public == info.onlyId && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase)) ||
                                             (s.owner_private == db.members.FirstOrDefault(it=>it.public_id==info.onlyId).private_id && s.to_public == owner.public_id && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase))
+                                        orderby s.sending_date descending
                                         select new
                                         {
                                             guidMsg = s.id,

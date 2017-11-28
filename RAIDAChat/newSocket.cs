@@ -18,10 +18,10 @@ namespace RAIDAChat
         List<AuthInfoWithSocket> mClients = new List<AuthInfoWithSocket>();
 
         //rcn1
-        int portRcn = 49011;
+        //int portRcn = 49011;
 
         //rcn2
-        //int portRcn = 49012;
+        int portRcn = 49012;
 
         public void OpenSocket()
         {
@@ -30,7 +30,9 @@ namespace RAIDAChat
                 webSocket = new WebSocketServer();
                 var serverConfig = new SuperSocket.SocketBase.Config.ServerConfig();
                 serverConfig.MaxConnectionNumber = 100000;
- 
+
+                //serverConfig.IdleSessionTimeOut = 0;
+
                 serverConfig.Listeners = new List<SuperSocket.SocketBase.Config.ListenerConfig>() {
                     new SuperSocket.SocketBase.Config.ListenerConfig() { Port = portRcn, Backlog = 1000, Ip = "Any", Security = "None" }
                 };
@@ -52,7 +54,10 @@ namespace RAIDAChat
 
         private void WebSocket_SessionClosed(WebSocketSession session, SuperSocket.SocketBase.CloseReason value)
         {
-            mClients.Remove(mClients.First(it => it.socket == session));
+            if (mClients.Any(it => it.socket == session))
+            {
+                mClients.Remove(mClients.First(it => it.socket == session));
+            }
         }
 
         private void WebSocket_NewMessageReceived(WebSocketSession session, string value)

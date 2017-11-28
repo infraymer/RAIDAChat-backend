@@ -1,0 +1,556 @@
+﻿<div id="status_bar" class="row">   
+    @foreach (var serv in ViewBag.SocketList)
+    {   
+        <div class="alert alert-warning col-xs-@(ViewBag.SocketList.Count > 12? 1:12/ViewBag.SocketList.Count)" role="alert" addr="@serv.Value">@serv.Key</div>
+    }    
+</div>
+
+@* Область авторизации *@
+<div id="div_auth" class="row" style="display:none">
+
+    <div class="alert alert-danger alert-dismissible fade in" role="alert" id="alert_error_auth" style="display:none">
+        <button type="button" class="close" onclick="$('#alert_error_auth').hide()"><span aria-hidden="true">×</span></button>
+        <strong id="auth_error_text"></strong>
+    </div>
+
+    <div class="co-xs-12">
+        <div class="form-group">
+            <label for="auth_login">Login</label>
+            <input type="text" class="form-control" id="auth_login" maxlength="32" placeholder="GUID: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX">
+        </div>
+        <div class="form-group">
+            <label for="auth_an">Password (AN)</label>
+            <input type="password" class="form-control" id="auth_an" maxlength="32" placeholder="GUID: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX">
+        </div>
+        <button id="btn_auth" class="btn btn-primary col-xs-12">LogIn</button>
+    </div>
+</div>
+
+@* Рабочая область для чата, создания новой группы и добавления пользователя в группу *@
+<div id="div_workarea" class="row" style="display:block">
+    <button id="btn_modal_newGroup" class="btn btn-primary" aria-label="Left Align">
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+        New group
+    </button>
+    <button id="btn_modal_userinGroup" class="btn btn-primary" aria-label="Left Align">
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+        Add users in group
+    </button>
+    
+    <button id="btn_getAllMsg" class="btn btn-primary" aria-label="Left Align">
+        <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+        GetAllMessage
+    </button>
+
+    <br /><br /><hr />
+    <div class="col-xs-2" style="padding-right: 0">
+        <ul class="nav nav-tabs tabs-left">
+            <li class="active" data-recipient="22222222222222222222222222222222" data-group="false"><a href="#tab0" data-toggle="tab">Пользователь или группа</a></li>
+        </ul>
+    </div>
+
+    <div class="col-xs-10 my_h3_small well well-small" >       
+        <div class="tab-content" style="min-height:500px; max-height:500px; overflow-x:hidden; overflow-y:scroll">
+            <div class="tab-pane active" id="tab0">              
+                @for (int i = 0; i < 45; i++)
+                {
+                <div class="row">
+                    <div class="col-xs-12">Message</div>
+                </div>
+                }
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-11">
+                <input type="text" class="form-control" id="tb_msg" placeholder="Message" />
+            </div>
+            <div class="col-xs-1">
+                <button class="btn btn-info" title="Send" id="btn_sendMsg">
+                    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    @* Модальное окно для регистрации *@
+    <div class="modal fade" id="modal_reg" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">User Info</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="reg_login">Login</label>
+                        <input type="text" class="form-control" id="reg_login" maxlength="32" placeholder="GUID: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX">
+                    </div>
+                    <div class="form-group">
+                        <label for="reg_an">Password (AN)</label>
+                        <input type="password" class="form-control" id="reg_an" maxlength="32" placeholder="GUID: XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX">
+                    </div>
+                    <div class="alert alert-danger alert-dismissible fade in" role="alert" id="alert_error_reg" style="display:none">
+                        <button type="button" class="close" onclick="$('#alert_error_reg').hide()"><span aria-hidden="true">×</span></button>
+                        <strong id="reg_error_text"></strong>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="btn_reg">Registration</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Модальное окно для создания группы *@
+    <div class="modal fade" id="modal_newGroup" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">New Group Info</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" id="modal_form_group">
+                        <label for="group_name">Group name</label>
+                        <input type="text" class="form-control" id="group_name" maxlength="32" placeholder="Name of new group">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="btn_newGroup">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* Модальное окно для добавления нового пользователя в группу *@
+    <div class="modal fade" id="modal_userinGroup" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add users in group</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="group_name">Group name</label>
+                        <select class="form-control" id="sel_group_name"></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="group_name">Users</label>
+                        <div id="users_cblist">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" id="inlineCheckbox1" value="option1"> 1
+                            </label>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" id="btn_addUserInGroup">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+
+       
+        $(document).ready(function () {
+            var elInfo = $('#status_bar .alert') //Элемент содержащий индикаторы поключения к серверам
+            var socks = []  //Массив с поключениями
+            var myLogin = 0
+            var inputMsgBag = []   //Буфер для всех входящих сообщений
+
+            var responseForAuth = {count : 0, data:[]} //Объект для хранения сообщений при авторизации 
+            var responseForReg = { count: 0, data: [] } //Объект для хранения сообщений при регистрации
+            var responseForGetMsg = { count: 0, data: [] } //Объект для хранения сообщений при регистрации
+
+            connect()
+
+            $('#btn_reconnect').click(function () {
+                socks = []
+                $('#status_bar .alert').addClass('alert-warning').removeClass('alert-danger').removeClass('alert-success')
+                connect()
+            })
+
+            //Авторизация
+            $('#btn_auth').click(function () {
+                var data = {}
+                data.login = $('#auth_login').val()
+                data.an = $('#auth_an').val()
+                var sendMsg = JSON.stringify(new SendingMessage('authorization', data))
+                responseForAuth.count = 0
+                responseForAuth.data = []
+                $(socks).each(function () {
+                    if (this.wsocket.readyState == 1) {
+                        this.wsocket.sendmessage(sendMsg);
+                        responseForAuth.count++
+                    }
+                })
+            })
+
+            //Регистрация
+            $('#btn_reg').click(function () {
+                var data = {}
+                data.login = $('#reg_login').val()
+                data.an = $('#reg_an').val()
+                var sendMsg = JSON.stringify(new SendingMessage('registration', data))
+                responseForReg.count = 0
+                responseForReg.data = []
+                $(socks).each(function () {
+                    if (this.wsocket.readyState == 1) {
+                        this.wsocket.sendmessage(sendMsg);
+                        responseForReg.count++
+                    }
+                })
+            })
+
+            //Создание группы
+            $('#btn_newGroup').click(function () {
+                if ($('#group_name').val().length > 0) {
+                    $('#modal_form_group').removeClass('has-error')
+                    var data = {}
+                    data.groupName = $('#group_name').val()
+                    data.public_id = guid()
+                    var sendMsg = JSON.stringify(new SendingMessage('createGroup', data))
+                    var count = 0
+                    $(socks).each(function () {
+                        if (this.wsocket.readyState == 1) {
+                            this.wsocket.sendmessage(sendMsg);
+                            count++
+                        }
+                    })
+                } else {
+                    $('#modal_form_group').addClass('has-error')
+                    $('#group_name').focus()
+                }
+            })
+
+            //Добавление пользователя в группу
+            $('#btn_addUserInGroup').click(function () {
+                //var data = {}
+                //data.groupName = $('#group_name').val()
+                //data.public_id = guid()
+                //var sendMsg = JSON.stringify(new SendingMessage('createGroup', data))
+                //var count = 0
+                //$(socks).each(function () {
+                //    if (this.wsocket.readyState == 1) {
+                //        this.wsocket.sendmessage(sendMsg);
+                //        count++
+                //    }
+                //})
+            })
+
+            $('#tb_msg').keydown(function (event) {
+                if (event.keyCode == 13) sendMessage();
+            })
+            $('#btn_sendMsg').click(function () {
+                sendMessage()
+            })
+
+            $('#btn_getAllMsg').click(function () {
+                getAllMessage()
+            })
+
+            
+
+
+
+            //Активаторы модальных окон
+            $('#btn_newProfile').click(function () {
+                $('#modal_reg').modal('show');
+            })
+            $('#btn_modal_newGroup').click(function () {
+                $('#modal_newGroup').modal('show');
+            })
+            $('#btn_modal_userinGroup').click(function () {
+                $('#modal_userinGroup').modal('show');
+            })
+
+            //Подключение к серверам
+            function connect() {
+                //for (var i = 0, len = elInfo.length; i < len; i++) {
+                //    (function (ind) {
+                //        //setTimeout(function () { console.log(elInfo[ind]) }, 1000);
+                //        setTimeout(function () { socks.push(new Socket($(elInfo[ind]).attr('addr'))) } , 10);
+                //    })(i);
+
+                    
+                //}
+                //var i = 0;
+
+                
+
+                $(elInfo).each(function () {
+                    socks.push(new Socket($(this).attr('addr')))
+                    //i++
+                    //if (i > 1)
+                    //return false
+                   
+                })
+            }
+
+            //Разбиение и отправка сообщения на сервера
+            function sendMessage() {
+                var b64msg = btoa($('#tb_msg').val())
+                $('#tb_msg').val('')
+
+                if (!b64msg) {
+                    delete b64msg;
+                    return;
+                }
+                console.log('Sending message in base64: ' + b64msg)
+                var activeSock = 0
+                $(socks).each(function () {
+                    if (this.wsocket.readyState == 1) {
+                        activeSock++
+                    }
+                })
+                var b64msgParts = [];
+                var splitPos = 0;
+
+                //var partLen =
+                //    (socks.length > b64msg.length) ? 1 : Math.floor(b64msg.length / socks.length)                  
+                var partLen =
+                    (activeSock > b64msg.length) ? 1 : Math.floor(b64msg.length / activeSock)
+                while (splitPos < b64msg.length) {
+                    b64msgParts.push(b64msg.slice(splitPos, splitPos += partLen));
+                }
+
+                var activeChat = $('li.active')
+                var data = {}
+                data.recipientId = activeChat.attr('data-recipient')
+                data.toGroup = activeChat.attr('data-group')
+                    
+                data.guidMsg = guid()
+                data.sendTime = Date.now()
+                   
+                data.totalFrg = activeSock
+                    
+                var count = 0
+                $(socks).each(function () {
+                    if (this.wsocket.readyState == 1) {
+                        data.textMsg = b64msgParts.pop()
+                        data.curFrg = activeSock - count
+                        var sendMsg = JSON.stringify(new SendingMessage('sendMsg', data))
+                        console.log(sendMsg)
+                        this.wsocket.sendmessage(sendMsg);
+                        count++
+                    }
+                })
+
+                //e_msgs.value = atob(b64msgParts.join('')) + '\n' + b64msgParts.join('');
+
+                //b64msgParts.splice(0, b64msgParts.length);
+                //delete partLen, splitPos;
+            }
+
+            //Запрос на получение всех сообщений
+            function getAllMessage() {
+                var data1 = {}
+                data1.login = '11111111111111111111111111111111'
+                data1.an = '11111111111111111111111111111111'
+                var sendMsg = JSON.stringify(new SendingMessage('authorization', data1))
+                responseForAuth.count = 0
+                responseForAuth.data = []
+                $(socks).each(function () {
+                    if (this.wsocket.readyState == 1) {
+                        this.wsocket.sendmessage(sendMsg);
+                        responseForAuth.count++
+                    }
+                })
+
+                
+                var data = {}
+                data.getAll = true
+                data.onGroup = false
+                data.onlyId = "00000000000000000000000000000000"
+                var sendMsg = JSON.stringify(new SendingMessage('getMsg', data))
+                responseForGetMsg.count = 0
+                responseForGetMsg.data = []
+                $(socks).each(function () {
+                    if (this.wsocket.readyState == 1) {
+                        console.log('gettAllMsg')
+                        this.wsocket.sendmessage(sendMsg);
+                        responseForGetMsg.count++
+                    }
+                })
+
+
+                //"execFun": "getMsg",
+                //    "data": {
+                //    "login": "80f7efc032dd4a7c97f69fca51ad3000",
+                //        "an": "d842703c8acb4bd893876d700f60683e",
+                //            "getAll": "true",
+                //                "onGroup": "false",
+                //                    "onlyId": "00000000000000000000000000000000"
+                //}
+
+            }
+
+            //Типо класс для сокета
+            function Socket(address) {
+                this.connect = function () {
+                    if (typeof (WebSocket) !== 'undefined') {
+                        return this.wsocket = new WebSocket(this.url);
+                    } else {
+                        return this.wsocket = new MozWebSocket(this.url);
+                    }
+                }
+
+                this.url = address
+                this.wsocket = this.connect()
+
+                this.wsocket.onopen = function () {
+                    $(".alert[addr='" + this.url + "']").addClass('alert-success').removeClass('alert-warning').removeClass('alert-danger')
+                }
+                this.wsocket.onclose = function () {
+                    $(".alert[addr='" + this.url + "']").addClass('alert-danger').removeClass('alert-success').removeClass('alert-warning')
+                }
+
+                this.wsocket.onmessage = function (msg) {
+                    inputMsgBag.push(msg.data)
+                    watchInputMsg();
+                };
+                this.wsocket.sendmessage = function (msg) {
+                    console.log(msg)
+                    this.send(msg)
+                };
+            }
+
+            //Распределитель входящих сообщений от сервера
+            function watchInputMsg() {
+                while (inputMsgBag.length > 0) {
+                    var inputObj = JSON.parse(inputMsgBag.pop())
+
+                    switch (inputObj.callFunction) {
+                        case calledFun.AUTHIRIZATION:
+                            responseForAuth.data.push(inputObj)
+                            watchResponseAuth()
+                            break;
+                        case calledFun.REGISTRATION:
+                            responseForReg.data.push(inputObj)
+                            watchResponseReg()
+                            break;
+                        case calledFun.SEND_MSG:
+                            console.log(inputObj)
+                            break;
+                        case calledFun.GET_MSG:
+                            responseForGetMsg.data.push(inputObj)
+                            watchResponseGetMsgs()
+                            break;
+                    }
+                }
+            }
+
+            //Метод обработки буфера сообщений при аторизации
+            function watchResponseAuth() {
+                if (responseForAuth.count == responseForAuth.data.length) {
+                    var errInd = responseForAuth.data.findIndex(el => el.success == false )
+                    if ( errInd> -1) {
+                        $('#auth_error_text').html(responseForAuth.data[errInd].msgError)
+                        $('#alert_error_auth').show()
+                        return
+                    }
+                    myLogin = $('#auth_login').val()
+                    $('#div_auth').hide();
+                    $('#div_workarea').show()
+                    responseForAuth.count = 0
+                    responseForAuth.data = []
+                }
+            }
+
+            //Метод обработки буфера сообщений при регистрации
+            function watchResponseReg() {
+                if (responseForReg.count == responseForReg.data.length) {
+                    var errInd = responseForReg.data.findIndex(el => el.success == false)
+                    if (errInd > -1) {
+                        var errorText = responseForReg.data[errInd].msgError
+                        if (responseForReg.data[errInd].msgError.indexOf('Некорректый блок data') > -1) {
+                            errorText = 'Неверный формат введённых данных'
+                        }
+                        $('#reg_error_text').html(errorText)
+                        $('#alert_error_reg').removeClass('alert-success').addClass('alert-danger').show()
+                        return
+                    } else {
+                        $('#reg_error_text').html('Registration completed')
+                        $('#alert_error_reg').removeClass('alert-danger').addClass('alert-success').show()
+                        responseForReg.count = 0
+                        responseForReg.data = []
+                    }
+                }
+            }
+
+            //Метод обработки сообщений при получении всех сообщений предназначенных пользователю
+            function watchResponseGetMsgs() {
+                if (responseForGetMsg.count == responseForGetMsg.data.length) {
+
+                    responseForGetMsg.data[0].data.push({
+                        "guidMsg": "91d8333f-a55b-40af-b46c-a63e214c93c5",
+                        "textMsg": "test message for one server111111",
+                        "sender": "11111111-1111-1111-1111-111111111111",
+                        "group": "False",
+                        "recipient": "22222222-2222-2222-2222-222222222222",
+                        "curFrg": 1,
+                        "totalFrg": 1,
+                        "sendTime": 1511450497620
+                    });
+
+                    var dictionary = {}
+
+
+                    $(responseForGetMsg.data).each(function () {
+                        $(this.data).each(function () {
+                            if (!(this.guidMsg in dictionary)) {
+                                dictionary[this.guidMsg] = []
+                            }
+                            dictionary[this.guidMsg].push(this)
+                        })
+                    })
+                
+                    console.log(dictionary)
+
+                    //responseForGetMsg.count = 0
+                    //responseForGetMsg.data = []
+                }
+            }
+
+            //Объект для отправки сообщения серверу
+            function SendingMessage(name, data) {
+                this.execFun = name
+                this.data = data
+            }
+
+            //Генерация GUID
+            function S4() {
+                return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+            }
+            function guid() {
+                return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+            }
+
+            //Перечисление возможных выполненых функций, возвращаемых в ответе
+            const calledFun = {
+                AUTHIRIZATION: 'authorization',
+                REGISTRATION: 'registration',
+                CREATE_GROUP: 'createGroup',
+                ADD_USER_IN_GROUP: '',
+                SEND_MSG: 'sendMsg',
+                NEW_MSG: 'newMsg',
+                GET_MSG: 'getMsg'
+            }
+        })
+        
+    </script>
+
+
+
+
+
+
+

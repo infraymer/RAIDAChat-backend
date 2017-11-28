@@ -52,7 +52,7 @@
             <pre>
 Для того чтобы получать ответ от сервера, необходимо подписаться на рассылку:
 {
-    "execFun": "subscribe",
+    "execFun": "authorization",
     "data": {
         "login": "public_id",
         "an": "user AN"
@@ -87,14 +87,14 @@
         $txt = document.getElementById('message'),
         $messages = document.getElementById('messages'),
 
-        socketConnect = "ws://192.168.0.102:49011",
-        detinServ = "http://192.168.0.102:8080/raidachat/api/openConnect";
+        //socketConnect = "ws://192.168.0.102:49011",
+        //detinServ = "http://192.168.0.102:8080/raidachat/api/openConnect";
 
         //socketConnect = "ws://5.141.98.216:49011",
         //detinServ = "http://5.141.98.216:49001/rcn1/api/openConnect"; 
 
-        //socketConnect = "ws://5.141.98.216:49012",
-        //detinServ = "http://5.141.98.216:49001/rcn2/api/openConnect"; 
+        socketConnect = "ws://5.141.98.216:49012",
+        detinServ = "http://5.141.98.216:49001/rcn2/api/openConnect"; 
 
         reConnect()
         

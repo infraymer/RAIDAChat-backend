@@ -17,7 +17,7 @@ namespace RAIDAChat.Controllers
 
             Dictionary<Guid, String> groups = new Dictionary<Guid, String>();
 
-            using (var db =  new CloudChatEntities())
+            using (var db = new CloudChatEntities())
             {
                 db.members.ToList().ForEach(it => users.Add(it.public_id, it.an));
                 db.groups.ToList().ForEach(it => groups.Add(it.group_id, it.group_name_part));
@@ -28,5 +28,17 @@ namespace RAIDAChat.Controllers
 
             return View();
         }
+
+        //public ActionResult Chat()
+        //{
+        //    ViewBag.SocketList = new Dictionary<String, String>() { {"localhost", "ws://192.168.0.102:49011/" }
+        //   // ViewBag.SocketList = new Dictionary<String, String>() { {"localhost", "ws://192.168.0.102:49011/" }, { "rcn1", "ws://5.141.98.216:49011/" }, { "rcn2", "ws://5.141.98.216:49012/" }
+        //    //, { "rcn21", "ws://5.141.98.216:49012" }, { "rcn22", "ws://5.141.98.216:49012" }, { "rcn23", "ws://5.141.98.216:49012" }, { "rcn24", "ws://5.141.98.216:49012" }
+        //    //, { "rcn72", "ws://5.141.98.216:49012" }, { "rcn26", "ws://5.141.98.216:49012" }, { "rcn25", "ws://5.141.98.216:49012" }, { "rcn225", "ws://5.141.98.216:49012" }, { "rcn251", "ws://5.141.98.216:49012" }, { "rcn253", "ws://5.141.98.216:49012" }
+        //    };
+
+        //    return View();
+        //}
+
     }
 }
