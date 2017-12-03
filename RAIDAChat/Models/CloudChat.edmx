@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Хранилище CloudChatModel1" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Хранилище CloudChatModel1" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="content_over_8000">
           <Key>
             <PropertyRef Name="shar_id" />
@@ -27,7 +27,7 @@
             <PropertyRef Name="group_id" />
           </Key>
           <Property Name="group_id" Type="uniqueidentifier" Nullable="false" />
-          <Property Name="group_name_part" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="group_name_part" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="owner_private_id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="photo_fragment" Type="varchar" MaxLength="8000" Nullable="false" />
           <Property Name="org_private_id" Type="uniqueidentifier" Nullable="false" />
@@ -226,8 +226,7 @@
     FROM [dbo].[organizations] AS [organizations]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CloudChatModel1" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -255,7 +254,7 @@
             <PropertyRef Name="group_id" />
           </Key>
           <Property Name="group_id" Type="Guid" Nullable="false" />
-          <Property Name="group_name_part" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="group_name_part" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="owner_private_id" Type="Guid" Nullable="false" />
           <Property Name="photo_fragment" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="org_private_id" Type="Guid" Nullable="false" />
@@ -313,7 +312,7 @@
           <EntitySet Name="shares" EntityType="Self.shares" />
           <EntitySet Name="organizations" EntityType="Self.organizations" />
           <FunctionImport Name="usp_content_over_8000Delete">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_content_over_8000Insert" ReturnType="Collection(CloudChatModel1.usp_content_over_8000Insert_Result)">
             <Parameter Name="id" Mode="In" Type="Int32" />
@@ -321,7 +320,7 @@
             <Parameter Name="file_data" Mode="In" Type="Binary" />
           </FunctionImport>
           <FunctionImport Name="usp_content_over_8000Select" ReturnType="Collection(CloudChatModel1.usp_content_over_8000Select_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_content_over_8000Update">
             <Parameter Name="id" Mode="In" Type="Int32" />
@@ -329,14 +328,14 @@
             <Parameter Name="file_data" Mode="In" Type="Binary" />
           </FunctionImport>
           <FunctionImport Name="usp_content_under_8000Delete">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_content_under_8000Insert" ReturnType="Collection(CloudChatModel1.usp_content_under_8000Insert_Result)">
             <Parameter Name="id" Mode="In" Type="Int32" />
             <Parameter Name="file_data" Mode="In" Type="Binary" />
           </FunctionImport>
           <FunctionImport Name="usp_content_under_8000Select" ReturnType="Collection(CloudChatModel1.usp_content_under_8000Select_Result)">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_content_under_8000Update" ReturnType="Collection(CloudChatModel1.usp_content_under_8000Update_Result)">
             <Parameter Name="id" Mode="In" Type="Int32" />
@@ -362,7 +361,7 @@
             <Parameter Name="allow_or_deny" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="usp_groupsDelete">
-            <Parameter Name="group_id" Mode="In" Type="Guid" />
+          <Parameter Name="group_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_groupsInsert" ReturnType="Collection(CloudChatModel1.usp_groupsInsert_Result)">
             <Parameter Name="group_id" Mode="In" Type="Guid" />
@@ -372,7 +371,7 @@
             <Parameter Name="org_private_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_groupsSelect" ReturnType="Collection(CloudChatModel1.usp_groupsSelect_Result)">
-            <Parameter Name="group_id" Mode="In" Type="Guid" />
+          <Parameter Name="group_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_groupsUpdate" ReturnType="Collection(CloudChatModel1.usp_groupsUpdate_Result)">
             <Parameter Name="group_id" Mode="In" Type="Guid" />
@@ -382,7 +381,7 @@
             <Parameter Name="org_private_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_membersDelete">
-            <Parameter Name="public_id" Mode="In" Type="Guid" />
+          <Parameter Name="public_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_membersInsert" ReturnType="Collection(CloudChatModel1.usp_membersInsert_Result)">
             <Parameter Name="public_id" Mode="In" Type="Guid" />
@@ -396,7 +395,7 @@
             <Parameter Name="away_busy_ready" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="usp_membersSelect" ReturnType="Collection(CloudChatModel1.usp_membersSelect_Result)">
-            <Parameter Name="public_id" Mode="In" Type="Guid" />
+          <Parameter Name="public_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_membersUpdate" ReturnType="Collection(CloudChatModel1.usp_membersUpdate_Result)">
             <Parameter Name="public_id" Mode="In" Type="Guid" />
@@ -410,7 +409,7 @@
             <Parameter Name="away_busy_ready" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="usp_sharesDelete">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_sharesInsert" ReturnType="Collection(CloudChatModel1.usp_sharesInsert_Result)">
             <Parameter Name="id" Mode="In" Type="Guid" />
@@ -429,7 +428,7 @@
             <Parameter Name="reserve" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="usp_sharesSelect">
-            <Parameter Name="id" Mode="In" Type="Int32" />
+          <Parameter Name="id" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_sharesUpdate" ReturnType="Collection(CloudChatModel1.usp_sharesUpdate_Result)">
             <Parameter Name="id" Mode="In" Type="Guid" />

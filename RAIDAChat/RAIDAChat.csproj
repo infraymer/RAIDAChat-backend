@@ -316,7 +316,15 @@
       <DependentUpon>CloudChat.edmx</DependentUpon>
     </Content>
     <None Include="Properties\PublishProfiles\rcn1.pubxml" />
+    <None Include="Properties\PublishProfiles\rcn10.pubxml" />
     <None Include="Properties\PublishProfiles\rcn2.pubxml" />
+    <None Include="Properties\PublishProfiles\rcn3.pubxml" />
+    <None Include="Properties\PublishProfiles\rcn4.pubxml" />
+    <None Include="Properties\PublishProfiles\rcn5.pubxml" />
+    <None Include="Properties\PublishProfiles\rcn6.pubxml" />
+    <None Include="Properties\PublishProfiles\rcn7.pubxml" />
+    <None Include="Properties\PublishProfiles\rcn8.pubxml" />
+    <None Include="Properties\PublishProfiles\rcn9.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />

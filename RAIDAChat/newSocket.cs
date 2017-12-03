@@ -18,10 +18,35 @@ namespace RAIDAChat
         List<AuthInfoWithSocket> mClients = new List<AuthInfoWithSocket>();
 
         //rcn1
-        //int portRcn = 49011;
+        int portRcn = 49011;
 
         //rcn2
-        int portRcn = 49012;
+        //int portRcn = 49012;
+
+        //rcn3
+        //int portRcn = 49013;
+
+        //rcn4
+        //int portRcn = 49014;
+
+        //rcn5
+        //int portRcn = 49015;
+        
+        //rcn6
+        //int portRcn = 49016;
+        
+        //rcn7
+        //int portRcn = 49017;
+        
+        //rcn8
+        //int portRcn = 49018;
+        
+        //rcn9
+        //int portRcn = 49019;
+        
+        //rcn10
+        //int portRcn = 49020;
+
 
         public void OpenSocket()
         {
@@ -30,9 +55,7 @@ namespace RAIDAChat
                 webSocket = new WebSocketServer();
                 var serverConfig = new SuperSocket.SocketBase.Config.ServerConfig();
                 serverConfig.MaxConnectionNumber = 100000;
-
-                //serverConfig.IdleSessionTimeOut = 0;
-
+                
                 serverConfig.Listeners = new List<SuperSocket.SocketBase.Config.ListenerConfig>() {
                     new SuperSocket.SocketBase.Config.ListenerConfig() { Port = portRcn, Backlog = 1000, Ip = "Any", Security = "None" }
                 };
