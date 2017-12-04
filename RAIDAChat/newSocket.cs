@@ -129,7 +129,7 @@ namespace RAIDAChat
             }
             else if (socketMessage.execFun.Equals("closesocket") && webSocket != null)
             {
-                session.Send("Сокет будет закрыт");
+                session.Send("Socket was closed");
                 webSocket.Stop();
             }            
             else
@@ -173,7 +173,7 @@ namespace RAIDAChat
                 {
                     outputSocket = new OutputSocketMessage(socketMessage.execFun,
                                     false,
-                                    "Вы не авторизированы. Для продолжения работы необходимо авторизоваться",
+                                    "You are not authorized. To continue working you need to login.",
                                     new { }
                                 );
                     SendMessage(session, JsonConvert.SerializeObject(outputSocket));

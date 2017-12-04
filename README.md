@@ -42,7 +42,7 @@ For transmission from the server on the _client_ to use such template:
 >}
 **_Possible response errors:_**
 
-1. Пользователь с таким логином уже существует. (The user with such login already exists)
+1. The user with such login already exists
 ---
 
 **_Description:_** Authorization of the user in a chat.\
@@ -104,9 +104,9 @@ For transmission from the server on the _client_ to use such template:
 >}
 **_Possible response errors:_**
 
-1. Пользователь не найден. (User is not found)
-1. Группа не найдена. (Group is not found)
-1. Пользователь уже состоит в данной группе. (The user already consists in this group) 
+1. User is not found
+1. Group is not found
+1. The user already consists in this group 
 ---
 
 **_Description:_** Sending message for the server.\
@@ -141,8 +141,8 @@ For transmission from the server on the _client_ to use such template:
 >}
 **_Possible response errors:_**
 >
-1. Пользователь не найден. (User is not found)
-1. Группа не найдена. (Group is not found)
+1. User is not found
+1. Group is not found
 
 ---
 **_Description:_** Request for obtaining all messages from the server.\
@@ -174,8 +174,25 @@ For transmission from the server on the _client_ to use such template:
 >  "totalFrg": "all_fragments_in_msg"
 >}
 **_Possible response errors:_**
-1. Пользователь не найден. (User is not found)
-1. Группа не найдена. (Group is not found)
+1. User is not found
+1. Group is not found
+
+---
+**_Description:_** Request for obtaining user he all groups from the server.\
+**_Request to Chat service:_**
+
+>```JSON
+>{
+>  "execFun": "getMyGroup",
+>  "data": {}
+>}
+
+**_Return from Chat service:_**
+>```
+>"data": {
+>  "id": "public_group_id - GUID",
+>  "name": "group_name_part"
+>}
 
 ---
 Operating procedure with the server:

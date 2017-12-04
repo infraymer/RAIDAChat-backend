@@ -32,7 +32,7 @@ namespace RAIDAChat.ReflectionClass
             catch
             {
                 outp.success = false;
-                outp.msgError = "Некорректый блок data";
+                outp.msgError = "Invalid sending data";
                 rez.msgForOwner = outp;
             }                       
             return sucObj;
@@ -46,8 +46,8 @@ namespace RAIDAChat.ReflectionClass
              {
                 "execFun": "authorization",
                 "data": {
-                    "login": "80f7efc032dd4a7c97f69fca51ad3000",
-                    "an": "d842703c8acb4bd893876d700f60683e"
+                    "login": "22222222-2222-2222-2222-222222222222",
+                    "an": "22222222-2222-2222-2222-222222222222"
                 }
              }
              */
@@ -133,7 +133,7 @@ namespace RAIDAChat.ReflectionClass
                 if(db.members.Any(it => it.public_id == info.login))
                 {
                     output.success = false;
-                    output.msgError = "Пользователь с таким логином уже существует";
+                    output.msgError = "The user with such login already exists";
                 }
                 else
                 {
@@ -149,17 +149,14 @@ namespace RAIDAChat.ReflectionClass
         {
             #region Тестовые данные
             /*
-             *  public_id - Добавить в API (Id Groups)
-                        {
-                            "execFun": "createGroup",
-                            "data": {
-                                "login": "80f7efc032dd4a7c97f69fca51ad3000",
-                                "an": "d842703c8acb4bd893876d700f60683e",
-                                "groupName": "MeCloseGroup",
-                                "public_id": "48A0CA0657DE4FB09CDC86008B2A8EBE"
-                            }
-                        }
-                        */
+            {
+                "execFun": "createGroup",
+                "data": {
+                    "groupName": "MeCloseGroup",
+                    "public_id": "48A0CA0657DE4FB09CDC86008B2A8EBE"
+                }
+            }
+            */
             #endregion
 
             OutputSocketMessage output = new OutputSocketMessage("createGroup", true, "", new { });
@@ -171,36 +168,14 @@ namespace RAIDAChat.ReflectionClass
                 return rez;
             }
 
-            //GroupInfo info;
-            //try
-            //{
-            //    info = JsonConvert.DeserializeObject<GroupInfo>(val.ToString());
-            //}
-            //catch
-            //{
-            //    output.success = false;
-            //    output.msgError = "Некорректый блок data";
-            //    rez.msgForOwner = output;
-            //    return rez;
-            //}
-
             using (var db = new CloudChatEntities())
             {
-
-                //if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
-                //{
                 Guid owner = db.usp_membersSelect(myPublicLogin).First().private_id;
-                
+
                 db.usp_groupsInsert(info.public_id, info.name, owner, "", Guid.Empty);
                 db.usp_group_membersInsert(info.public_id, owner, "allow_or_deny");
-                //}
-                //else
-                //{
-                //    output.success = false;
-                //    output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
-                //}
             }
-
+            output.data = new { id = info.public_id, name = info.name };
             rez.msgForOwner = output;
             //rez.usersId.Add(info.login);
             return rez;
@@ -231,25 +206,8 @@ namespace RAIDAChat.ReflectionClass
                 return rez;
             }
 
-            //AddMemberInGroupInfo info;
-            //try
-            //{
-            //    info = JsonConvert.DeserializeObject<AddMemberInGroupInfo>(val.ToString());
-            //}
-            //catch
-            //{
-            //    output.success = false;
-            //    output.msgError = "Некорректый блок data";
-            //    rez.msgForOwner = output;
-            //    return rez;
-            //}
-
             using (var db = new CloudChatEntities())
-            {
-
-                //if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
-                //{
-                    
+            {                    
                 if(db.members.Any(it => it.public_id == info.memberId))
                 {
                     Guid owner = db.members.First(it => it.public_id == myPublicLogin).private_id;
@@ -259,38 +217,33 @@ namespace RAIDAChat.ReflectionClass
                         if (db.group_members.Any(it=> it.group_id==info.groupId && it.member_id == memberId))
                         {
                             output.success = false;
-                            output.msgError = "Пользователь уже состоит в данной группе";
+                            output.msgError = "The user already consists in this group";
                         }
                         else
                         {
                             db.usp_group_membersInsert(info.groupId, memberId, "I don't known");
                             rez.usersId.Add(info.memberId);
-                            rez.msgForOther = new { callFunction = "You added in group" };
+                            rez.msgForOther = new {
+                                callFunction = "addMemberInGroup",
+                                id = info.groupId,
+                                name =db.groups.Where(it=>it.group_id==info.groupId).First().group_name_part
+                            };
                         }
                     }
                     else
                     {
                         output.success = false;
-                        output.msgError = "Группа не найдена";
+                        output.msgError = "Group is not found";
                     }                    
                 }
                 else
                 {
                     output.success = false;
-                    output.msgError = "Пользователь не найден";
+                    output.msgError = "User is not found";
                 }
-                   
-                //}
-                //else
-                //{
-                //    output.success = false;
-                //    output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
-                //}
             }
 
             rez.msgForOwner = output;
-            //rez.usersId.Add(info.login);
-            
             return rez;
         }
 
@@ -369,30 +322,14 @@ namespace RAIDAChat.ReflectionClass
                 return rez;
             }
 
-            //InputMsgInfo info;
-            //try
-            //{
-            //    info = JsonConvert.DeserializeObject<InputMsgInfo>(val.ToString());
-            //}
-            //catch
-            //{
-            //    output.success = false;
-            //    output.msgError = "Некорректый блок data";
-            //    rez.msgForOwner = output;
-            //    return rez;
-            //}
-
             using (var db = new CloudChatEntities())
             {
-
-                //if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
-                //{
                 if (info.toGroup)
                 {
                     if(!db.groups.Any(it => it.group_id == info.recipientId))
                     {
                         output.success = false;
-                        output.msgError = "Группа не найдена";
+                        output.msgError = "Group is not found";
                         rez.msgForOwner = output;
                         return rez;
                     }
@@ -400,7 +337,7 @@ namespace RAIDAChat.ReflectionClass
                 else if(!db.members.Any(it => it.public_id == info.recipientId))
                 {
                     output.success = false;
-                    output.msgError = "Пользователь не найден";
+                    output.msgError = "User is not found";
                     rez.msgForOwner = output;
                     return rez;
                 }
@@ -429,8 +366,12 @@ namespace RAIDAChat.ReflectionClass
                     
                     db.SaveChanges();
 
+                    string groupName = "";
+                    if (info.toGroup) {
+                        groupName = db.groups.Where(it => it.group_id == info.recipientId).FirstOrDefault().group_name_part;
+                    }
 
-                    outputForOther = new OutGetMsgInfo(info.msgId, info.textMsg, myPublicLogin, info.toGroup.ToString(), info.recipientId, info.sendTime, info.curFrg, info.totalFrg);
+                    outputForOther = new OutGetMsgInfo(info.msgId, info.textMsg, myPublicLogin, info.toGroup.ToString(), info.recipientId, info.sendTime, info.curFrg, info.totalFrg, groupName);
 
                     if (info.toGroup)
                     {
@@ -448,14 +389,6 @@ namespace RAIDAChat.ReflectionClass
                     }
 
                 }
-                //}
-                //else
-                //{
-                //    output.success = false;
-                //    output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
-                //    rez.msgForOwner = output;
-                //    return rez;
-                //}
             }
             output.data = outputForOther;
             rez.msgForOwner = output;
@@ -512,27 +445,10 @@ namespace RAIDAChat.ReflectionClass
                 return rez;
             }
 
-            //InGetMsgInfo info;
-            //try
-            //{
-            //    info = JsonConvert.DeserializeObject<InGetMsgInfo>(val.ToString());
-            //}
-            //catch
-            //{
-            //    output.success = false;
-            //    output.msgError = "Некорректый блок data";
-            //    rez.msgForOwner = output;
-            //    return rez;
-            //}
-
             using (var db = new CloudChatEntities())
-            {
-
-               
+            {              
                 List<OutGetMsgInfo> list = new List<OutGetMsgInfo>();
-
-                //if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
-                //{               
+            
                 var owner = db.usp_membersSelect(myPublicLogin).Single();
 
                 var myListGroupId = from m in db.members
@@ -543,10 +459,11 @@ namespace RAIDAChat.ReflectionClass
 
                 if (info.getAll)
                 {
-
                     var msgInfoList = from s in db.shares
                                     join content in db.content_over_8000 on s.id equals content.shar_id
-                                    where s.owner_private == owner.private_id ||
+                                    join groupp in db.groups on s.to_public equals groupp.group_id into gs
+                                    from groupp in gs.DefaultIfEmpty()
+                                      where s.owner_private == owner.private_id ||
                                             (s.to_public == owner.public_id && s.self_one_or_group.Equals("false", StringComparison.InvariantCultureIgnoreCase)) ||
                                             (myListGroupId.Contains(s.to_public) && s.self_one_or_group.Equals("true", StringComparison.InvariantCultureIgnoreCase))
                                     orderby s.sending_date descending
@@ -559,7 +476,8 @@ namespace RAIDAChat.ReflectionClass
                                         recip = s.to_public,
                                         time = s.sending_date,
                                         cur = s.current_fragment,
-                                        total = s.total_fragment
+                                        total = s.total_fragment,
+                                        grName = groupp.group_name_part
                                     };
 
                     foreach (var item in msgInfoList)
@@ -573,7 +491,8 @@ namespace RAIDAChat.ReflectionClass
                                 item.recip,
                                 item.time,
                                 item.cur,
-                                item.total
+                                item.total,
+                                item.grName
                             )
                         );
                     }
@@ -587,7 +506,7 @@ namespace RAIDAChat.ReflectionClass
                         if (!db.groups.Any(it => it.group_id == info.onlyId) && !myListGroupId.Contains(info.onlyId))
                         {
                             output.success = false;
-                            output.msgError = "Группа не найдена";
+                            output.msgError = "Group is not found";
                             rez.msgForOwner = output;
                             return rez;
                         }
@@ -619,7 +538,8 @@ namespace RAIDAChat.ReflectionClass
                                         item.recip,
                                         item.time,
                                         item.cur,
-                                        item.total
+                                        item.total,
+                                        ""
                                     )
                                 );
                             }
@@ -628,7 +548,7 @@ namespace RAIDAChat.ReflectionClass
                     else if(!db.members.Any(it => it.public_id == info.onlyId))
                     {
                         output.success = false;
-                        output.msgError = "Пользователь не найден";
+                        output.msgError = "User is not found";
                         rez.msgForOwner = output;
                         return rez;
                     }
@@ -662,7 +582,8 @@ namespace RAIDAChat.ReflectionClass
                                     item.recip,
                                     item.time,
                                     item.cur,
-                                    item.total
+                                    item.total,
+                                    ""
                                 )
                             );
                         }
@@ -670,15 +591,6 @@ namespace RAIDAChat.ReflectionClass
 
                 }
 
-                //}
-                //else
-                //{
-                //    output.success = false;
-                //    output.msgError = "Пользователь не авторизирован. Неправильный логин или пароль";
-
-                //    rez.msgForOwner = output;
-                //    return rez;
-                //} 
                 output.data = list;
             }
             rez.msgForOwner = output;
@@ -686,8 +598,22 @@ namespace RAIDAChat.ReflectionClass
             return rez;
         }
 
+        private OutputSocketMessageWithUsers getmygroup(Object val, Guid myPublicLogin) {
+            OutputSocketMessage output = new OutputSocketMessage("getMyGroup", true, "", new { });
+            OutputSocketMessageWithUsers rez = new OutputSocketMessageWithUsers();
 
-       
+            using (var db = new CloudChatEntities()) {
+                output.data = db.group_members.Where(it => it.member_id == db.members.Where(i => i.public_id == myPublicLogin).FirstOrDefault().private_id)
+                    .Select(u => new
+                    {
+                        id = u.group_id,
+                        name = u.groups.group_name_part
+                    }).ToList();
+            }
+
+            rez.msgForOwner = output;
+            return rez;
+        }
     }
 
 
