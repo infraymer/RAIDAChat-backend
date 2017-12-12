@@ -111,22 +111,7 @@ namespace RAIDAChat.ReflectionClass
             {
                 return rez;
             }
-            
-            //string vall = val.ToString();
-            //AuthInfo info;
-            //try
-            //{
-            //    info = JsonConvert.DeserializeObject<AuthInfo>(vall);
-            //}
-            //catch 
-            //{
-            //    output.success = false;
-            //    output.msgError = "Некорректый блок data";
-            //    rez.msgForOwner = output;
-            //    return rez;            
-            //}
-
-           
+                       
             using (var db = new CloudChatEntities())
             {
 
@@ -188,8 +173,6 @@ namespace RAIDAChat.ReflectionClass
                         {
                             "execFun": "addMemberInGroup",
                             "data": {
-                                "login": "80f7efc032dd4a7c97f69fca51ad3000",
-                                "an": "d842703c8acb4bd893876d700f60683e",
                                 "memberId": "788FEFAD0ED24436AD73D968685110E8",
                                 "groupId": "48A0CA0657DE4FB09CDC86008B2A8EBE"
                             }
@@ -254,8 +237,6 @@ namespace RAIDAChat.ReflectionClass
                         {
                             "execFun": "sendMsg",
                             "data": {
-                                "login": "80f7efc032dd4a7c97f69fca51ad3000",
-                                "an": "d842703c8acb4bd893876d700f60683e",
                                 "recipientId": "788FEFAD0ED24436AD73D968685110E8",     
                                 "toGroup": "false",
                                 "textMsg": "test message for one user",
@@ -269,8 +250,6 @@ namespace RAIDAChat.ReflectionClass
                         {
                             "execFun": "sendMsg",
                             "data": {
-                                "login": "80f7efc032dd4a7c97f69fca51ad3000",
-                                "an": "d842703c8acb4bd893876d700f60683e",
                                 "recipientId": "48A0CA0657DE4FB09CDC86008B2A8EBE",     
                                 "toGroup": "true",
                                 "textMsg": "test message for group",
@@ -283,8 +262,6 @@ namespace RAIDAChat.ReflectionClass
                         {
                             "execFun": "sendMsg",
                             "data": {
-                                "login": "788FEFAD0ED24436AD73D968685110E8",
-                                "an": "0AA700EEA5F44D64B9E0243EFB08C4DB",
                                 "recipientId": "80f7efc032dd4a7c97f69fca51ad3000",     
                                 "toGroup": "false",
                                 "textMsg": "response fo test message",
@@ -297,8 +274,6 @@ namespace RAIDAChat.ReflectionClass
                         {
                             "execFun": "sendMsg",
                             "data": {
-                                "login": "788FEFAD0ED24436AD73D968685110E8",
-                                "an": "0AA700EEA5F44D64B9E0243EFB08C4DB",
                                 "recipientId": "48A0CA0657DE4FB09CDC86008B2A8EBE",
                                 "toGroup": "true",
                                 "textMsg": "response for group test message",
@@ -404,8 +379,6 @@ namespace RAIDAChat.ReflectionClass
                        {
                            "execFun": "getMsg",
                            "data": {
-                               "login": "80f7efc032dd4a7c97f69fca51ad3000",
-                               "an": "d842703c8acb4bd893876d700f60683e",
                                "getAll": "true",     
                                "onGroup": "false",
                                "onlyId": "00000000000000000000000000000000"
@@ -415,8 +388,6 @@ namespace RAIDAChat.ReflectionClass
                        {
                            "execFun": "getMsg",
                            "data": {
-                               "login": "80f7efc032dd4a7c97f69fca51ad3000",
-                               "an": "d842703c8acb4bd893876d700f60683e",
                                "getAll": "false",     
                                "onGroup": "true",
                                "onlyId": "48A0CA0657DE4FB09CDC86008B2A8EBE"
@@ -425,8 +396,6 @@ namespace RAIDAChat.ReflectionClass
                        {
                            "execFun": "getMsg",
                            "data": {
-                               "login": "80f7efc032dd4a7c97f69fca51ad3000",
-                               "an": "d842703c8acb4bd893876d700f60683e",
                                "getAll": "false",     
                                "onGroup": "false",
                                "onlyId": "788FEFAD0ED24436AD73D968685110E8"
@@ -598,18 +567,35 @@ namespace RAIDAChat.ReflectionClass
             return rez;
         }
 
-        private OutputSocketMessageWithUsers getmygroup(Object val, Guid myPublicLogin) {
-            OutputSocketMessage output = new OutputSocketMessage("getMyGroup", true, "", new { });
+        private OutputSocketMessageWithUsers getmydialogs(Object val, Guid myPublicLogin) {
+            OutputSocketMessage output = new OutputSocketMessage("getMyDialogs", true, "", new { });
             OutputSocketMessageWithUsers rez = new OutputSocketMessageWithUsers();
 
             using (var db = new CloudChatEntities()) {
-                output.data = db.group_members.Where(it => it.member_id == db.members.Where(i => i.public_id == myPublicLogin).FirstOrDefault().private_id)
+                var data = db.group_members.Where(it => it.member_id == db.members.Where(i => i.public_id == myPublicLogin).FirstOrDefault().private_id)
                     .Select(u => new
                     {
                         id = u.group_id,
-                        name = u.groups.group_name_part
+                        name = u.groups.group_name_part,
+                        group = true
                     }).ToList();
+
+
+                Guid myPrivateId = db.members.Where(t => t.public_id == myPublicLogin).FirstOrDefault().private_id;
+                data.AddRange(db.shares.Where(it => it.self_one_or_group.ToLower() == "false" && (it.to_public == myPublicLogin || it.owner_private == myPrivateId))
+                        .Select(u => new
+                        {
+                            id = u.to_public == myPublicLogin ? db.members.Where(m => m.private_id == u.owner_private).FirstOrDefault().public_id : u.to_public,
+                            name = u.to_public == myPublicLogin ? db.members.Where(m => m.private_id == u.owner_private).FirstOrDefault().public_id.ToString() : u.to_public.ToString(),
+                            group = false
+                        })
+                        .Distinct()
+                        .ToList()
+                );
+
+                output.data = data;
             }
+
 
             rez.msgForOwner = output;
             return rez;

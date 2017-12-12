@@ -81,7 +81,8 @@ For transmission from the server on the _client_ to use such template:
 **_Return from Chat service:_**
 >```
 >"data": {
->    Nothing 
+>    "id": "Public id group",
+>    "name": "Name of group" 
 >}
 **_Possible response errors:_**
 
@@ -99,8 +100,15 @@ For transmission from the server on the _client_ to use such template:
 >}
 **_Return from Chat service:_**
 >```
+>For owner:
 >"data": {
 >    Nothing 
+>}
+>For other users:
+>"data": {
+>    "callFunction": "addMemberInGroup",
+>    "id": "Public id group",
+>    "name": "Name of group" 
 >}
 **_Possible response errors:_**
 
@@ -137,7 +145,15 @@ For transmission from the server on the _client_ to use such template:
 **_Return from Chat service:_**
 >```
 >"data": {
->    Nothing 
+>    "guidMsg": "guid_message",
+>    "textMsg": "message",
+>    "sender": "sender_id(login)_or_groupId",
+>    "group": "true_of_false",
+>    "recipient": "Recipient public id",
+>    "sendTime": "message_sending_time",
+>    "curFrg": "current_fragment_msg",
+>    "totalFrg": "all_fragments_in_msg",
+>    "groupName": "Name of group. If it's group"
 >}
 **_Possible response errors:_**
 >
@@ -165,13 +181,15 @@ For transmission from the server on the _client_ to use such template:
 **_Return from Chat service:_**
 >```
 >"data": {
->  "guidMsg": "guid_message",
->  "textMsg": "message",
->  "sender": "sender_id(login)_or_groupId",
->  "group": "true_of_false",
->  "sendTime": "message_sending_time",
->  "curFrg": "current_fragment_msg",
->  "totalFrg": "all_fragments_in_msg"
+>    "guidMsg": "guid_message",
+>    "textMsg": "message",
+>    "sender": "sender_id(login)_or_groupId",
+>    "group": "true_of_false",
+>    "recipient": "Recipient public id",
+>    "sendTime": "message_sending_time",
+>    "curFrg": "current_fragment_msg",
+>    "totalFrg": "all_fragments_in_msg",
+>    "groupName": "Name of group. If it's group"
 >}
 **_Possible response errors:_**
 1. User is not found
@@ -183,15 +201,16 @@ For transmission from the server on the _client_ to use such template:
 
 >```JSON
 >{
->  "execFun": "getMyGroup",
+>  "execFun": "getMyDialogs",
 >  "data": {}
 >}
 
 **_Return from Chat service:_**
 >```
 >"data": {
->  "id": "public_group_id - GUID",
->  "name": "group_name_part"
+>    "id": "public_group_id_or_member_id - GUID",
+>    "name": "group_name_part",
+>    "group": "Is this a group? (true_or_false)"
 >}
 
 ---

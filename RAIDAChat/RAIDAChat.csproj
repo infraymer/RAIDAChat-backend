@@ -315,6 +315,7 @@
     <Content Include="Models\CloudChat.edmx.diagram">
       <DependentUpon>CloudChat.edmx</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\rcn1.pubxml" />
     <None Include="Properties\PublishProfiles\rcn10.pubxml" />
     <None Include="Properties\PublishProfiles\rcn2.pubxml" />

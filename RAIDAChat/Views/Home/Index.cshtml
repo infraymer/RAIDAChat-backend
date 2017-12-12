@@ -88,8 +88,12 @@
     var socket,
         $txt = document.getElementById('message'),
         $messages = document.getElementById('messages'),
-        //detinServ = ["http://5.141.98.216:49001/rcn1/api/openConnect", "http://5.141.98.216:49001/rcn2/api/openConnect", "http://5.141.98.216:49001/rcn3/api/openConnect", "http://5.141.98.216:49001/rcn4/api/openConnect", "http://5.141.98.216:49001/rcn5/api/openConnect", "http://5.141.98.216:49001/rcn6/api/openConnect", "http://5.141.98.216:49001/rcn7/api/openConnect", "http://5.141.98.216:49001/rcn8/api/openConnect", "http://5.141.98.216:49001/rcn9/api/openConnect", "http://5.141.98.216:49001/rcn10/api/openConnect"],
-        cleanDBServ = ["http://5.141.98.216:49001/rcn1/api/cleanDB", "http://5.141.98.216:49001/rcn2/api/cleanDB", "http://5.141.98.216:49001/rcn3/api/cleanDB", "http://5.141.98.216:49001/rcn4/api/cleanDB", "http://5.141.98.216:49001/rcn5/api/cleanDB", "http://5.141.98.216:49001/rcn6/api/cleanDB", "http://5.141.98.216:49001/rcn7/api/cleanDB", "http://5.141.98.216:49001/rcn8/api/cleanDB", "http://5.141.98.216:49001/rcn9/api/cleanDB", "http://5.141.98.216:49001/rcn10/api/cleanDB"],
+       // detinServ = ["http://5.141.98.216:49001/rcn1/api/openConnect", "http://5.141.98.216:49001/rcn2/api/openConnect", "http://5.141.98.216:49001/rcn3/api/openConnect", "http://5.141.98.216:49001/rcn4/api/openConnect", "http://5.141.98.216:49001/rcn5/api/openConnect", "http://5.141.98.216:49001/rcn6/api/openConnect", "http://5.141.98.216:49001/rcn7/api/openConnect", "http://5.141.98.216:49001/rcn8/api/openConnect", "http://5.141.98.216:49001/rcn9/api/openConnect", "http://5.141.98.216:49001/rcn10/api/openConnect"],
+        //cleanDBServ = ["http://5.141.98.216:49001/rcn1/api/cleanDB", "http://5.141.98.216:49001/rcn2/api/cleanDB", "http://5.141.98.216:49001/rcn3/api/cleanDB", "http://5.141.98.216:49001/rcn4/api/cleanDB", "http://5.141.98.216:49001/rcn5/api/cleanDB", "http://5.141.98.216:49001/rcn6/api/cleanDB", "http://5.141.98.216:49001/rcn7/api/cleanDB", "http://5.141.98.216:49001/rcn8/api/cleanDB", "http://5.141.98.216:49001/rcn9/api/cleanDB", "http://5.141.98.216:49001/rcn10/api/cleanDB"],
+
+        //socketConnect = "ws://94.143.63.222:49011",
+        //detinServ = ["http://94.143.63.222:8080/testRaida/api/openConnect"],
+        //cleanDBServ = ["http://94.143.63.222:8080/testRaida/api/cleanDB"];
 
         socketConnect = "ws://192.168.0.102:49011",
         detinServ = ["http://192.168.0.102:8080/raidachat/api/openConnect"];
