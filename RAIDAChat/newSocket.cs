@@ -112,7 +112,7 @@ namespace RAIDAChat
                 {
                     inf.socket = session;
                     mClients.Add(inf);
-                    outputSocket = new OutputSocketMessage(socketMessage.execFun, true, "", new { });
+                    outputSocket = new OutputSocketMessage(socketMessage.execFun, true, "", new { publicId = inf.publicId });
                     SendMessage(session, JsonConvert.SerializeObject(outputSocket));
                     return;
                 }
@@ -144,7 +144,7 @@ namespace RAIDAChat
                     if (me != null)
                     {
                         AuthInfoWithSocket currentUser = mClients.FirstOrDefault(it => it.socket == session);
-                        OutputSocketMessageWithUsers response = (OutputSocketMessageWithUsers)me.Invoke(refClass, new object[] { socketMessage.data, currentUser?.login });
+                        OutputSocketMessageWithUsers response = (OutputSocketMessageWithUsers)me.Invoke(refClass, new object[] { socketMessage.data, currentUser?.publicId });
 
                         outputSocket = response.msgForOwner;
 
@@ -153,7 +153,7 @@ namespace RAIDAChat
                         if (outputSocket.success)
                         {
                             Action<AuthInfoWithSocket> action = delegate (AuthInfoWithSocket s) { SendMessage(s.socket, JsonConvert.SerializeObject(response.msgForOther)); };
-                            mClients.Where(it => response.usersId.Contains(it.login)).ToList().ForEach(action);
+                            mClients.Where(it => response.usersId.Contains(it.publicId)).ToList().ForEach(action);
                         }
 
                     }

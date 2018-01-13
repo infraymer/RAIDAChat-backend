@@ -271,8 +271,12 @@ namespace RAIDAChat.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_membersDelete", public_idParameter);
         }
     
-        public virtual ObjectResult<usp_membersInsert_Result> usp_membersInsert(Nullable<System.Guid> public_id, Nullable<System.Guid> an, Nullable<System.Guid> private_id, Nullable<System.DateTime> month_last_use, Nullable<System.Guid> org_id, string description_fragment, byte[] photo_fragment, Nullable<int> kb_bandwidth_used, string away_busy_ready)
+        public virtual ObjectResult<usp_membersInsert_Result> usp_membersInsert(string login, Nullable<System.Guid> public_id, Nullable<System.Guid> an, Nullable<System.Guid> private_id, Nullable<System.DateTime> month_last_use, Nullable<System.Guid> org_id, string description_fragment, byte[] photo_fragment, Nullable<int> kb_bandwidth_used, string away_busy_ready)
         {
+            var loginParameter = login != null ?
+                new ObjectParameter("login", login) :
+                new ObjectParameter("login", typeof(string));
+    
             var public_idParameter = public_id.HasValue ?
                 new ObjectParameter("public_id", public_id) :
                 new ObjectParameter("public_id", typeof(System.Guid));
@@ -309,7 +313,7 @@ namespace RAIDAChat.Models
                 new ObjectParameter("away_busy_ready", away_busy_ready) :
                 new ObjectParameter("away_busy_ready", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_membersInsert_Result>("usp_membersInsert", public_idParameter, anParameter, private_idParameter, month_last_useParameter, org_idParameter, description_fragmentParameter, photo_fragmentParameter, kb_bandwidth_usedParameter, away_busy_readyParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_membersInsert_Result>("usp_membersInsert", loginParameter, public_idParameter, anParameter, private_idParameter, month_last_useParameter, org_idParameter, description_fragmentParameter, photo_fragmentParameter, kb_bandwidth_usedParameter, away_busy_readyParameter);
         }
     
         public virtual ObjectResult<usp_membersSelect_Result> usp_membersSelect(Nullable<System.Guid> public_id)
@@ -321,8 +325,12 @@ namespace RAIDAChat.Models
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_membersSelect_Result>("usp_membersSelect", public_idParameter);
         }
     
-        public virtual ObjectResult<usp_membersUpdate_Result> usp_membersUpdate(Nullable<System.Guid> public_id, Nullable<System.Guid> an, Nullable<System.Guid> private_id, Nullable<System.DateTime> month_last_use, Nullable<System.Guid> org_id, string description_fragment, byte[] photo_fragment, Nullable<int> kb_bandwidth_used, string away_busy_ready)
+        public virtual ObjectResult<usp_membersUpdate_Result> usp_membersUpdate(string login, Nullable<System.Guid> public_id, Nullable<System.Guid> an, Nullable<System.Guid> private_id, Nullable<System.DateTime> month_last_use, Nullable<System.Guid> org_id, string description_fragment, byte[] photo_fragment, Nullable<int> kb_bandwidth_used, string away_busy_ready)
         {
+            var loginParameter = login != null ?
+                new ObjectParameter("login", login) :
+                new ObjectParameter("login", typeof(string));
+    
             var public_idParameter = public_id.HasValue ?
                 new ObjectParameter("public_id", public_id) :
                 new ObjectParameter("public_id", typeof(System.Guid));
@@ -359,7 +367,7 @@ namespace RAIDAChat.Models
                 new ObjectParameter("away_busy_ready", away_busy_ready) :
                 new ObjectParameter("away_busy_ready", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_membersUpdate_Result>("usp_membersUpdate", public_idParameter, anParameter, private_idParameter, month_last_useParameter, org_idParameter, description_fragmentParameter, photo_fragmentParameter, kb_bandwidth_usedParameter, away_busy_readyParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_membersUpdate_Result>("usp_membersUpdate", loginParameter, public_idParameter, anParameter, private_idParameter, month_last_useParameter, org_idParameter, description_fragmentParameter, photo_fragmentParameter, kb_bandwidth_usedParameter, away_busy_readyParameter);
         }
     
         public virtual int usp_sharesDelete(Nullable<int> id)

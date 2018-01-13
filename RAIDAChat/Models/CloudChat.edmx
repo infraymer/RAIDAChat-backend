@@ -36,6 +36,7 @@
           <Key>
             <PropertyRef Name="public_id" />
           </Key>
+          <Property Name="login" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="public_id" Type="uniqueidentifier" Nullable="false" />
           <Property Name="an" Type="uniqueidentifier" Nullable="false" />
           <Property Name="private_id" Type="uniqueidentifier" Nullable="false" />
@@ -131,7 +132,7 @@
         </Function>
         <Function Name="usp_groupsInsert" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="group_id" Type="uniqueidentifier" Mode="In" />
-          <Parameter Name="group_name_part" Type="varchar" Mode="In" />
+          <Parameter Name="group_name_part" Type="nvarchar" Mode="In" />
           <Parameter Name="owner_private_id" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="photo_fragment" Type="varchar" Mode="In" />
           <Parameter Name="org_private_id" Type="uniqueidentifier" Mode="In" />
@@ -150,6 +151,7 @@
           <Parameter Name="public_id" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="usp_membersInsert" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="login" Type="varchar" Mode="In" />
           <Parameter Name="public_id" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="an" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="private_id" Type="uniqueidentifier" Mode="In" />
@@ -164,6 +166,7 @@
           <Parameter Name="public_id" Type="uniqueidentifier" Mode="In" />
         </Function>
         <Function Name="usp_membersUpdate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="login" Type="varchar" Mode="In" />
           <Parameter Name="public_id" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="an" Type="uniqueidentifier" Mode="In" />
           <Parameter Name="private_id" Type="uniqueidentifier" Mode="In" />
@@ -273,6 +276,7 @@
           <Property Name="photo_fragment" Type="Binary" MaxLength="8000" FixedLength="false" Nullable="false" />
           <Property Name="kb_bandwidth_used" Type="Int32" Nullable="false" />
           <Property Name="away_busy_ready" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="login" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="shares">
           <Key>
@@ -384,6 +388,7 @@
           <Parameter Name="public_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_membersInsert" ReturnType="Collection(CloudChatModel1.usp_membersInsert_Result)">
+            <Parameter Name="login" Mode="In" Type="String" />
             <Parameter Name="public_id" Mode="In" Type="Guid" />
             <Parameter Name="an" Mode="In" Type="Guid" />
             <Parameter Name="private_id" Mode="In" Type="Guid" />
@@ -398,6 +403,7 @@
           <Parameter Name="public_id" Mode="In" Type="Guid" />
           </FunctionImport>
           <FunctionImport Name="usp_membersUpdate" ReturnType="Collection(CloudChatModel1.usp_membersUpdate_Result)">
+            <Parameter Name="login" Mode="In" Type="String" />
             <Parameter Name="public_id" Mode="In" Type="Guid" />
             <Parameter Name="an" Mode="In" Type="Guid" />
             <Parameter Name="private_id" Mode="In" Type="Guid" />
@@ -643,6 +649,7 @@
           <EntitySetMapping Name="members">
             <EntityTypeMapping TypeName="CloudChatModel1.members">
               <MappingFragment StoreEntitySet="members">
+                <ScalarProperty Name="login" ColumnName="login" />
                 <ScalarProperty Name="public_id" ColumnName="public_id" />
                 <ScalarProperty Name="an" ColumnName="an" />
                 <ScalarProperty Name="private_id" ColumnName="private_id" />

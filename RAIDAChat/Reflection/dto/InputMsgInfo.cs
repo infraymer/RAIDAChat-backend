@@ -10,6 +10,7 @@ namespace RAIDAChat.Reflection.dto
     public class InputMsgInfo: AuthInfo
     {
         public Guid recipientId { get; set; }
+        public String recipientLogin { get; set; }
         public bool toGroup { get; set; }
         public string textMsg { get; set; }
 

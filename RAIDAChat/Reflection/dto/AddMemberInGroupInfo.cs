@@ -7,7 +7,7 @@ namespace RAIDAChat.Reflection.dto
 {
     public class AddMemberInGroupInfo
     {
-        public Guid memberId { get; set; }
+        public String memberLogin { get; set; }
         public Guid groupId { get; set; }
     }
 }

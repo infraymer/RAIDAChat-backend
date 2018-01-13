@@ -22,5 +22,6 @@ namespace RAIDAChat.Models
         public byte[] photo_fragment { get; set; }
         public int kb_bandwidth_used { get; set; }
         public string away_busy_ready { get; set; }
+        public string login { get; set; }
     }
 }

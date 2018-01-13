@@ -30,16 +30,15 @@ For transmission from the server on the _client_ to use such template:
 >{
 >  "execFun": "registration",
 >  "data": {
->     "login": "GUID - login",
->     "an": "GIUD - password"
+>     "login": "String",
+>     "an": "GIUD",
+>     "publicId": "GUID"
 >     } 
 >}
 **_Return from Chat service:_**
 
 >```
->"data": {
->    Nothing 
->}
+>"data": { }
 **_Possible response errors:_**
 
 1. The user with such login already exists
@@ -52,15 +51,15 @@ For transmission from the server on the _client_ to use such template:
 >{
 >  "execFun": "authorization",
 >  "data": {
->     "login": "GUID - login",
->     "an": "GUID - password"
+>     "login": "String",
+>     "an": "GUID"
 >     } 
 >}
 **_Return from Chat service:_**
 
 >```
 >"data": {
->    Nothing
+>     "publicId": "GUID"
 >}
 **_Possible response errors:_**
 
@@ -73,16 +72,16 @@ For transmission from the server on the _client_ to use such template:
 >{
 >  "execFun": "createGroup",
 >  "data": {
->     "groupName": "name_for_new_group",
->     "public_id": " GUID - group"
+>     "groupName": "String",
+>     "public_id": " GUID"
 >     }
 >}
 
 **_Return from Chat service:_**
 >```
 >"data": {
->    "id": "Public id group",
->    "name": "Name of group" 
+>    "id": "GUID",
+>    "name": "String" 
 >}
 **_Possible response errors:_**
 
@@ -94,21 +93,19 @@ For transmission from the server on the _client_ to use such template:
 >{
 >  "execFun": "addMemberInGroup",
 >  "data": {
->     "memberId": "GUID - user_login",     
->     "groupId": "GUID - group_id"
+>     "memberLogin": "String",     
+>     "groupId": "GUID"
 >     }
 >}
 **_Return from Chat service:_**
 >```
 >For owner:
->"data": {
->    Nothing 
->}
+>"data": { }
 >For other users:
 >"data": {
->    "callFunction": "addMemberInGroup",
->    "id": "Public id group",
->    "name": "Name of group" 
+>    "callFunction": "String",
+>    "id": "GUID",
+>    "name": "String" 
 >}
 **_Possible response errors:_**
 
@@ -124,17 +121,19 @@ For transmission from the server on the _client_ to use such template:
 >{
 >  "execFun": "sendMsg",
 >  "data": {
->     "recipientId": " GUID - login_of_member_or_groupId",     
->     "toGroup": "true_or_false",
->     "textMsg": "send_message",
->     "guidMsg": "GUID - guid_message",
->     "sendTime": "message_sending_time",
->     "curFrg": "current_fragment_msg",
->     "totalFrg": "all_fragments_in_msg"
+>     "recipientId": "GUID",   
+>     "recipientLogin": "String",
+>     "toGroup": "Boolean",
+>     "textMsg": "String",
+>     "guidMsg": "GUID",
+>     "sendTime": "Long",
+>     "curFrg": "Integer",
+>     "totalFrg": "Integer"
 >     }
 >}
 **_Properties:_**
 - *recipientId* - Id пользователя или группы, смотря для кого предназначено сообщение
+- *recipientLogin* - Логин пользователя кому предназначено сообщение (Для одно человека сверяется recipientId или recipientLogin, для группы только recipientId)
 - *toGroup* - Если сообщение предназначено для группы указываем **true**, если для определённого пользователя, то **false**
 - *textMsg* - Непосредственно текст сообщения
 - *guidMsg* - Идентификатор сообщения
@@ -145,15 +144,16 @@ For transmission from the server on the _client_ to use such template:
 **_Return from Chat service:_**
 >```
 >"data": {
->    "guidMsg": "guid_message",
->    "textMsg": "message",
->    "sender": "sender_id(login)_or_groupId",
->    "group": "true_of_false",
->    "recipient": "Recipient public id",
->    "sendTime": "message_sending_time",
->    "curFrg": "current_fragment_msg",
->    "totalFrg": "all_fragments_in_msg",
->    "groupName": "Name of group. If it's group"
+>    "guidMsg": "GUID",
+>    "textMsg": "String",
+>    "sender": "GUID",
+>    "group": "Boolean",
+>    "recipient": "GUID",
+>    "sendTime": "Long",
+>    "curFrg": "Integer",
+>    "totalFrg": "Integer",
+>    "senderName": "String",
+>    "groupName": "String"
 >}
 **_Possible response errors:_**
 >
@@ -168,9 +168,9 @@ For transmission from the server on the _client_ to use such template:
 >{
 >  "execFun": "getMsg",
 >  "data": {
->     "getAll": "true_or_false",     
->     "onGroup": "true_or_false",
->     "onlyId": "GUID - sender_id"
+>     "getAll": "Boolean",     
+>     "onGroup": "Boolean",
+>     "onlyId": "GUID"
 >     }
 >}
 **_Properties:_**
@@ -181,15 +181,16 @@ For transmission from the server on the _client_ to use such template:
 **_Return from Chat service:_**
 >```
 >"data": {
->    "guidMsg": "guid_message",
->    "textMsg": "message",
->    "sender": "sender_id(login)_or_groupId",
->    "group": "true_of_false",
->    "recipient": "Recipient public id",
->    "sendTime": "message_sending_time",
->    "curFrg": "current_fragment_msg",
->    "totalFrg": "all_fragments_in_msg",
->    "groupName": "Name of group. If it's group"
+>    "guidMsg": "GUID",
+>    "textMsg": "String",
+>    "sender": "GUID",
+>    "group": "Boolean",
+>    "recipient": "GUID",
+>    "sendTime": "Long",
+>    "curFrg": "Integer",
+>    "totalFrg": "Integer",
+>    "senderName": "String",
+>    "groupName": "String"
 >}
 **_Possible response errors:_**
 1. User is not found
@@ -208,11 +209,109 @@ For transmission from the server on the _client_ to use such template:
 **_Return from Chat service:_**
 >```
 >"data": {
->    "id": "public_group_id_or_member_id - GUID",
->    "name": "group_name_part",
->    "group": "Is this a group? (true_or_false)"
+>    "id": "GUID",
+>    "name": "String",
+>    "group": "Boolean"
 >}
 
+---
+##EXAMPLES
+
+Sample Request to Chat service for registration new user
+>```JSON
+>{
+>  "execFun": "registration",
+>  "data": {
+>     "login": "myLogin",
+>     "an": "99ab7bf3bef54f77b35ce8b5ee8f8260",
+>     "publicId": "50b411ceab24adeb0539de62100646c0"
+>     } 
+>}
+Sample Return from Chat service is success
+>```JSON
+>{
+>  "callFunction":"registration",
+>  "success":true,
+>  "msgError":"",
+>  "data":{}
+>}
+Sample Return from Chat service is error if user login already exists
+>```JSON
+>{
+>  "callFunction":"registration",
+>  "success":false,
+>  "msgError":"This login already exists",
+>  "data":{}
+>}
+
+Sample Request to Chat service for get all user messages
+>```JSON
+>{
+>  "execFun": "getMsg",
+>  "data": {
+>     "getAll": "true",     
+>     "onGroup": "false",
+>     "onlyId": "00000000000000000000000000000000"
+>  }
+>}
+Sample Return from Chat service is success
+Sample Request to Chat service for get all user messages
+>```JSON
+>{
+>  "callFunction": "getMsg",
+>  "success": true,
+>  "msgError": "",
+>  "data":[{
+>       "guidMsg": "a94cac44-561a-ce4f-dd34-042cb455cfb4",
+>       "textMsg": "MTIz",
+>       "sender": "80f7efc0-32dd-4a7c-97f6-9fca51ad3000",
+>       "group": "False",
+>       "recipient": "50b411ce-ab24-adeb-0539-de62100646c0",
+>       "curFrg": 1,
+>       "totalFrg": 1,
+>       "sendTime": 1512757166456,
+>       "senderName": "TestSenderLogin",
+>       "groupName": "myLogin"
+>     },
+>     {
+>       "guidMsg": "3ab190cf-0b94-1a83-b743-06b57523ca56",
+>       "textMsg": "ZWZ3ZQ==",
+>       "sender": "50b411ce-ab24-adeb-0539-de62100646c0",
+>       "group": "True",
+>       "recipient": "48A0CA06-57DE-4FB0-9CDC-86008B2A8EBE",
+>       "curFrg": 1,
+>       "totalFrg": 1,
+>       "sendTime": 1512407677017,
+>       "senderName": "myLogin",
+>       "groupName": "ShareChat"
+>  }]
+>}
+
+####Possible errors for all request
+Sample Return from Chat service is error if parameters in "data" have invalid data-type
+>```JSON
+>{
+>  "callFunction":"registration",
+>  "success":false,
+>  "msgError":"Invalid sending data",
+>  "data":{}
+>}
+Sample Return from Chat service is error if user in not authorized
+>```JSON
+>{
+>  "callFunction":"getMsg",
+>  "success":false,
+>  "msgError":"You are not authorized. To continue working you need to login.",
+>  "data":{}
+>}
+Sample Return from Chat service is error if attempt was to call a non-existent function
+>```JSON
+>{
+>  "callFunction":"getMsgError",
+>  "success":false,
+>  "msgError":"Function: 'getMsgError' not found",
+>  "data":{}
+>}
 ---
 Operating procedure with the server:
 

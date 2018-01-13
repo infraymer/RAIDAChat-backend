@@ -9,13 +9,19 @@ namespace RAIDAChat.Reflection.dto
 {
     public class AuthInfo
     {
-        public Guid login { get; set; }
+        public String login { get; set; }
         public Guid an { get; set; }
     }
 
     public class AuthInfoWithSocket: AuthInfo
     {
         public bool auth { get; set; }
+        public Guid publicId { get; set; }
         public WebSocketSession socket { get; set; }
+    }
+
+    public class RegistrationInfo: AuthInfo
+    {
+        public Guid publicId { get; set; }
     }
 }

@@ -26,10 +26,11 @@ namespace RAIDAChat.Reflection.dto
         public int totalFrg { get; set; }
         public long sendTime { get; set; }
 
+        public string senderName { get; set; }
         public string groupName { get; set; }
         public OutGetMsgInfo() {}
 
-        public OutGetMsgInfo(Guid guidMsg, string textMsg, Guid sender, string group, Guid recipient, long _time, int curFrg, int totalFrg, string groupName)
+        public OutGetMsgInfo(Guid guidMsg, string textMsg, Guid sender, string group, Guid recipient, long _time, int curFrg, int totalFrg, string senderName, string groupName)
         {
             this.guidMsg = guidMsg;
             this.textMsg = textMsg;
@@ -39,6 +40,7 @@ namespace RAIDAChat.Reflection.dto
             this.sendTime = _time;
             this.curFrg = curFrg;
             this.totalFrg = totalFrg;
+            this.senderName = senderName;
             this.groupName = groupName;
         }
     }

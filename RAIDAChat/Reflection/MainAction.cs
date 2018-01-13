@@ -38,7 +38,7 @@ namespace RAIDAChat.ReflectionClass
             return sucObj;
         }
 
-
+        //Работает
         public AuthInfoWithSocket Auth(object data)
         {
             #region Тестовые данные
@@ -46,10 +46,11 @@ namespace RAIDAChat.ReflectionClass
              {
                 "execFun": "authorization",
                 "data": {
-                    "login": "22222222-2222-2222-2222-222222222222",
-                    "an": "22222222-2222-2222-2222-222222222222"
+                    "login": "shRek",
+                    "an": "00000000000000000000000000000000"
                 }
              }
+              
              */
             #endregion
 
@@ -62,10 +63,10 @@ namespace RAIDAChat.ReflectionClass
 
                 using (var db = new CloudChatEntities())
                 {
-                    if (db.members.Any(it => it.public_id == info.login && it.an == info.an))
+                    if (db.members.Any(it => it.login.Trim().Equals(info.login, StringComparison.CurrentCultureIgnoreCase) && it.an == info.an))
                     {
                         output.auth = true;
-                        output.login = info.login;
+                        output.publicId = db.members.FirstOrDefault(it => it.login.Trim().Equals(info.login, StringComparison.CurrentCultureIgnoreCase) && it.an == info.an).public_id;
                         output.an = info.an;
                     }
                     else
@@ -80,7 +81,7 @@ namespace RAIDAChat.ReflectionClass
             }
             return output;
         }
-
+        //Работает
         private OutputSocketMessageWithUsers registration(Object val, Object nothing )
         {
             #region Тестовые данные
@@ -88,16 +89,9 @@ namespace RAIDAChat.ReflectionClass
             {
                 "execFun": "registration",
                 "data": {
-                    "login": "80f7efc032dd4a7c97f69fca51ad3000",
-                    "an": "d842703c8acb4bd893876d700f60683e"
-                }
-            }
-
-            {
-                "execFun": "registration",
-                "data": {
-                    "login": "788FEFAD0ED24436AD73D968685110E8",
-                    "an": "0AA700EEA5F44D64B9E0243EFB08C4DB"
+                    "login": "shREk",
+                    "an": "d842703c8acb4bd893876d700f60683e",
+                    "publicId": "80f7efc032dd4a7c97f69fca51ad3000"
                 }
             }
             */
@@ -106,7 +100,7 @@ namespace RAIDAChat.ReflectionClass
             OutputSocketMessage output = new OutputSocketMessage("registration", true, "", new { });
             OutputSocketMessageWithUsers rez = new OutputSocketMessageWithUsers();
 
-            AuthInfo info = DeserObj<AuthInfo>(val, output, out rez);
+            RegistrationInfo info = DeserObj<RegistrationInfo>(val, output, out rez);
             if(info == null)
             {
                 return rez;
@@ -115,21 +109,21 @@ namespace RAIDAChat.ReflectionClass
             using (var db = new CloudChatEntities())
             {
 
-                if(db.members.Any(it => it.public_id == info.login))
+                if(db.members.Any(it => it.login.Equals(info.login.Trim(), StringComparison.CurrentCultureIgnoreCase)))
                 {
                     output.success = false;
-                    output.msgError = "The user with such login already exists";
+                    output.msgError = "This login already exists";
                 }
                 else
                 {
-                    db.usp_membersInsert(info.login, info.an, Guid.NewGuid(), DateTime.Now, Guid.NewGuid(), "", new byte[5], 0, "redy");
+                    db.usp_membersInsert(info.login.Trim(), info.publicId, info.an, Guid.NewGuid(), DateTime.Now, Guid.NewGuid(), "", new byte[5], 0, "redy");
                 }
             }
 
             rez.msgForOwner = output;
             return rez;
         }
-
+        //Работает
         private OutputSocketMessageWithUsers creategroup(Object val, Guid myPublicLogin)
         {
             #region Тестовые данные
@@ -166,6 +160,7 @@ namespace RAIDAChat.ReflectionClass
             return rez;
         }
 
+        //Работает
         private OutputSocketMessageWithUsers addmemberingroup(Object val, Guid myPublicLogin)
         {
             #region Тестовые данные
@@ -173,7 +168,7 @@ namespace RAIDAChat.ReflectionClass
                         {
                             "execFun": "addMemberInGroup",
                             "data": {
-                                "memberId": "788FEFAD0ED24436AD73D968685110E8",
+                                "memberLogin": "shRek1",
                                 "groupId": "48A0CA0657DE4FB09CDC86008B2A8EBE"
                             }
                         }
@@ -191,21 +186,21 @@ namespace RAIDAChat.ReflectionClass
 
             using (var db = new CloudChatEntities())
             {                    
-                if(db.members.Any(it => it.public_id == info.memberId))
+                if(db.members.Any(it => it.login.Equals(info.memberLogin.Trim(), StringComparison.CurrentCultureIgnoreCase)))
                 {
                     Guid owner = db.members.First(it => it.public_id == myPublicLogin).private_id;
                     if (db.group_members.Any(it=>it.member_id==owner && it.group_id==info.groupId))
                     {
-                        Guid memberId = db.usp_membersSelect(info.memberId).First().private_id;
-                        if (db.group_members.Any(it=> it.group_id==info.groupId && it.member_id == memberId))
+                        members user = db.members.FirstOrDefault(it => it.login.Equals(info.memberLogin.Trim()));
+                        if (db.group_members.Any(it=> it.group_id==info.groupId && it.member_id == user.private_id))
                         {
                             output.success = false;
-                            output.msgError = "The user already consists in this group";
+                            output.msgError = "This user already consists in this group";
                         }
                         else
                         {
-                            db.usp_group_membersInsert(info.groupId, memberId, "I don't known");
-                            rez.usersId.Add(info.memberId);
+                            db.usp_group_membersInsert(info.groupId, user.private_id, "I don't known");
+                            rez.usersId.Add(user.public_id);
                             rez.msgForOther = new {
                                 callFunction = "addMemberInGroup",
                                 id = info.groupId,
@@ -238,6 +233,7 @@ namespace RAIDAChat.ReflectionClass
                             "execFun": "sendMsg",
                             "data": {
                                 "recipientId": "788FEFAD0ED24436AD73D968685110E8",     
+                                "recipientLogin": "user",
                                 "toGroup": "false",
                                 "textMsg": "test message for one user",
                                 "guidMsg": "91D8333FA55B40AFB46CA63E214C93C8",
@@ -299,6 +295,7 @@ namespace RAIDAChat.ReflectionClass
 
             using (var db = new CloudChatEntities())
             {
+                Guid recepId = info.recipientId; 
                 if (info.toGroup)
                 {
                     if(!db.groups.Any(it => it.group_id == info.recipientId))
@@ -309,12 +306,15 @@ namespace RAIDAChat.ReflectionClass
                         return rez;
                     }
                 }
-                else if(!db.members.Any(it => it.public_id == info.recipientId))
-                {
-                    output.success = false;
-                    output.msgError = "User is not found";
-                    rez.msgForOwner = output;
-                    return rez;
+                else {
+                    if (!db.members.Any(it => it.public_id == info.recipientId || it.login.Equals(info.recipientLogin.Trim(), StringComparison.CurrentCultureIgnoreCase)))
+                    {
+                        output.success = false;
+                        output.msgError = "User is not found";
+                        rez.msgForOwner = output;
+                        return rez;
+                    }
+                    recepId = db.members.FirstOrDefault(it => it.public_id == info.recipientId || it.login.Equals(info.recipientLogin.Trim(), StringComparison.CurrentCultureIgnoreCase)).public_id;
                 }
 
                 if (output.success)
@@ -328,7 +328,7 @@ namespace RAIDAChat.ReflectionClass
                     shares newShare = new shares();
                     newShare.id = info.msgId;
                     newShare.owner_private = db.usp_membersSelect(myPublicLogin).First().private_id;
-                    newShare.to_public = info.recipientId;
+                    newShare.to_public = recepId;
                     newShare.self_one_or_group = info.toGroup.ToString();
                     newShare.content = msg;
                     newShare.current_fragment = info.curFrg;
@@ -342,15 +342,20 @@ namespace RAIDAChat.ReflectionClass
                     db.SaveChanges();
 
                     string groupName = "";
+                    
                     if (info.toGroup) {
-                        groupName = db.groups.Where(it => it.group_id == info.recipientId).FirstOrDefault().group_name_part;
+                        groupName = db.groups.Where(it => it.group_id == recepId).FirstOrDefault().group_name_part;
+                    }
+                    else {
+                        groupName = db.members.FirstOrDefault(it => it.public_id == recepId).login;
                     }
 
-                    outputForOther = new OutGetMsgInfo(info.msgId, info.textMsg, myPublicLogin, info.toGroup.ToString(), info.recipientId, info.sendTime, info.curFrg, info.totalFrg, groupName);
+                    string login = db.members.FirstOrDefault(it=>it.private_id == newShare.owner_private).login;
+                    outputForOther = new OutGetMsgInfo(info.msgId, info.textMsg, myPublicLogin, info.toGroup.ToString(), recepId, info.sendTime, info.curFrg, info.totalFrg, login, groupName);
 
                     if (info.toGroup)
                     {
-                        db.group_members.Where(it => it.group_id == info.recipientId && it.member_id != newShare.owner_private)
+                        db.group_members.Where(it => it.group_id == recepId && it.member_id != newShare.owner_private)
                                 .ToList()
                                 .ForEach(it => rez.usersId.Add(
                                                             db.members.First(m=> m.private_id==it.member_id).public_id
@@ -360,7 +365,7 @@ namespace RAIDAChat.ReflectionClass
                     else
                     {
                         //rez.usersId.Add(info.login);
-                        rez.usersId.Add(info.recipientId);
+                        rez.usersId.Add(recepId);
                     }
 
                 }
@@ -446,11 +451,13 @@ namespace RAIDAChat.ReflectionClass
                                         time = s.sending_date,
                                         cur = s.current_fragment,
                                         total = s.total_fragment,
-                                        grName = groupp.group_name_part
+                                        grName = groupp.group_name_part,
+                                        login = db.members.FirstOrDefault(it => it.private_id == s.owner_private).login
                                     };
 
                     foreach (var item in msgInfoList)
                     {
+                        string senderName = Boolean.Parse(item.gr) ? item.grName : item.login;
                         list.Add(
                             new OutGetMsgInfo(
                                 item.guidMsg,
@@ -461,6 +468,7 @@ namespace RAIDAChat.ReflectionClass
                                 item.time,
                                 item.cur,
                                 item.total,
+                                item.login,
                                 item.grName
                             )
                         );
@@ -493,7 +501,8 @@ namespace RAIDAChat.ReflectionClass
                                                         recip = s.to_public,
                                                         time = s.sending_date,
                                                         cur = s.current_fragment,
-                                                        total = s.total_fragment
+                                                        total = s.total_fragment,
+                                                        login = db.members.FirstOrDefault(it=>it.private_id == s.owner_private).login
                                                     };
 
                             foreach (var item in msgInfoList)
@@ -508,7 +517,8 @@ namespace RAIDAChat.ReflectionClass
                                         item.time,
                                         item.cur,
                                         item.total,
-                                        ""
+                                        item.login,
+                                        item.login
                                     )
                                 );
                             }
@@ -537,7 +547,8 @@ namespace RAIDAChat.ReflectionClass
                                             recip = s.to_public,
                                             time = s.sending_date,
                                             cur = s.current_fragment,
-                                            total = s.total_fragment
+                                            total = s.total_fragment,
+                                            login = db.members.FirstOrDefault(it => it.private_id == s.owner_private).login
                                         };
 
                         foreach (var item in msgInfoList)
@@ -552,7 +563,8 @@ namespace RAIDAChat.ReflectionClass
                                     item.time,
                                     item.cur,
                                     item.total,
-                                    ""
+                                    item.login,
+                                    item.login
                                 )
                             );
                         }
@@ -566,8 +578,17 @@ namespace RAIDAChat.ReflectionClass
             //rez.usersId.Add(info.login);
             return rez;
         }
-
+        //Работает
         private OutputSocketMessageWithUsers getmydialogs(Object val, Guid myPublicLogin) {
+            #region Тестовые данные
+            /*
+                       {
+                          "execFun": "getMyDialogs",
+                          "data": {}
+                       }
+                       */
+            #endregion
+
             OutputSocketMessage output = new OutputSocketMessage("getMyDialogs", true, "", new { });
             OutputSocketMessageWithUsers rez = new OutputSocketMessageWithUsers();
 
@@ -586,7 +607,7 @@ namespace RAIDAChat.ReflectionClass
                         .Select(u => new
                         {
                             id = u.to_public == myPublicLogin ? db.members.Where(m => m.private_id == u.owner_private).FirstOrDefault().public_id : u.to_public,
-                            name = u.to_public == myPublicLogin ? db.members.Where(m => m.private_id == u.owner_private).FirstOrDefault().public_id.ToString() : u.to_public.ToString(),
+                            name = u.to_public == myPublicLogin ? db.members.Where(m => m.private_id == u.owner_private).FirstOrDefault().login : db.members.Where(m => m.public_id == u.to_public).FirstOrDefault().login,
                             group = false
                         })
                         .Distinct()
